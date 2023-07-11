@@ -2,11 +2,55 @@
 <html>
   <head>
     <title>Image Segmentation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      #image-upload {
+        display: none;
+      }
+
+      .upload-container {
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        cursor: pointer;
+      }
+
+      .upload-container:hover {
+        background-color: #f2f2f2;
+      }
+
+      .upload-container p {
+        margin-top: 0;
+      }
+
+      .uploaded-image {
+        max-width: 100%;
+        max-height: 300px;
+        margin-top: 20px;
+      }
+
+      .segmented-image {
+        max-width: 100%;
+        max-height: 300px;
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
-    <script src="segment.js"></script>
-
     <h1>Image Segmentation</h1>
+    <div class="upload-container" id="upload-container">
+      <p>Drag and drop an image here, or click to browse for an image.</p>
+    </div>
     <input id="image-upload" type="file" accept="image/*" />
     <div id="uploaded-image-container"></div>
     <div id="segmented-image-container"></div>
