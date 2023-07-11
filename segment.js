@@ -50,7 +50,7 @@ async function handleImageUpload(event) {
   // Create an HTML element to display the uploaded image
   const imgElement = document.createElement('img');
   imgElement.width = 300; // Set the desired width for the displayed image
-  document.body.appendChild(imgElement);
+  document.getElementById('uploaded-image-container').appendChild(imgElement);
 
   // Read and display the uploaded image
   const reader = new FileReader();
@@ -63,15 +63,38 @@ async function handleImageUpload(event) {
       const segmentedImgElement = document.createElement('img');
       segmentedImgElement.width = 300; // Set the desired width for the segmented image
       segmentedImgElement.src = segmentedImg;
-      document.body.appendChild(segmentedImgElement);
+      document.getElementById('segmented-image-container').appendChild(segmentedImgElement);
+
+      // Make the download button visible
+      const downloadButton = document.getElementById('download-button');
+      downloadButton.style.display = 'inline';
+
+      // Set the download URL to the segmented image
+      downloadButton.href = segmentedImg;
     });
   };
   reader.readAsDataURL(image);
 }
 
-// Create an input element for image upload
-const inputElement = document.createElement('input');
-inputElement.type = 'file';
-inputElement.accept = 'image/*';
-inputElement.addEventListener('change', handleImageUpload);
-document.body.appendChild(inputElement);
+// Add event listener for image upload
+const uploadContainer = document.getElementById('upload-container');
+uploadContainer.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  uploadContainer.classList.add('highlight');
+});
+uploadContainer.addEventListener('dragleave', (event) => {
+  event.preventDefault();
+  uploadContainer.classList.remove('highlight');
+});
+uploadContainer.addEventListener('drop', (event) => {
+  event.preventDefault();
+  uploadContainer.classList.remove('highlight');
+  const imageFile = event.dataTransfer.files[0];
+  if (imageFile && imageFile.type.includes('image')) {
+    const uploadInput = document.getElementById('image-upload');
+    uploadInput.files = event.dataTransfer.files;
+    handleImageUpload(event);
+  }
+});
+const imageUploadInput = document.getElementById('image-upload');
+imageUploadInput.addEventListener('change', handleImageUpload);
