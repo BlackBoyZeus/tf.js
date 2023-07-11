@@ -4,13 +4,16 @@
     <title>Image Segmentation</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f7f7f7;
         padding: 20px;
         text-align: center;
+        color: #333;
       }
 
       h1 {
         margin-bottom: 20px;
+        color: #dd4b39;
       }
 
       #image-upload {
@@ -23,10 +26,11 @@
         padding: 20px;
         margin-bottom: 20px;
         cursor: pointer;
+        background-color: #f2f2f2;
       }
 
       .upload-container:hover {
-        background-color: #f2f2f2;
+        background-color: #e1e1e1;
       }
 
       .upload-container p {
@@ -47,6 +51,18 @@
 
       .download-button {
         margin-top: 20px;
+        display: none;
+        background-color: #dd4b39;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+      }
+
+      .download-button:hover {
+        background-color: #c63728;
       }
     </style>
   </head>
@@ -59,13 +75,6 @@
     <div id="uploaded-image-container"></div>
     <div id="segmented-image-container"></div>
     <a href="#" download="segmented_image.png" id="download-button" class="download-button" style="display: none;">Download Segmented Image</a>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.10.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@3.10.0"></script>
-    <script src="script.js"></script>
-  </body>
-</html>
-
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.10.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@3.10.0"></script>
