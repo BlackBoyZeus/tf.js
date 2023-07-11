@@ -44,6 +44,10 @@
         max-height: 300px;
         margin-top: 20px;
       }
+
+      .download-button {
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
@@ -54,6 +58,14 @@
     <input id="image-upload" type="file" accept="image/*" />
     <div id="uploaded-image-container"></div>
     <div id="segmented-image-container"></div>
+    <a href="#" download="segmented_image.png" id="download-button" class="download-button" style="display: none;">Download Segmented Image</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.10.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@3.10.0"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.10.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@3.10.0"></script>
