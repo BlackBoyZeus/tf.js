@@ -1,81 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Text Extraction and OCR Example</title>
-    <style>
-        #loading {
-            display: none;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Text Extraction and OCR Example</title>
 </head>
 <body>
-    <h1>PDF Text Extraction and OCR Example</h1>
-    <input type="file" accept=".pdf" id="pdfInput">
-    <div id="result"></div>
-    <div id="loading">Processing...</div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/ocr"></script>
-    <script>
-        async function showLoading() {
-            document.getElementById('loading').style.display = 'block';
-        }
-        
-        async function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-        
-        async function extractTextFromPDF(pdfData) {
-            const pdf = await pdfjsLib.getDocument(pdfData).promise;
-            let pdfText = '';
-            
-            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                const page = await pdf.getPage(pageNum);
-                const pageText = await page.getTextContent();
-                
-                pageText.items.forEach(item => {
-                    pdfText += item.str + ' ';
-                });
-            }
-            
-            return pdfText;
-        }
-        
-        async function performOCR(text) {
-            const ocrModel = await tf.ocr.load();
-            const result = await ocrModel.recognize(text);
-            
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '';
-            
-            result.lines.forEach(line => {
-                const text = line.text;
-                const confidence = line.confidence;
-                
-                const lineElement = document.createElement('p');
-                lineElement.textContent = `Text: ${text} (Confidence: ${confidence})`;
-                
-                resultDiv.appendChild(lineElement);
-            });
-        }
-        
-        document.getElementById('pdfInput').addEventListener('change', async (event) => {
-            const pdfFile = event.target.files[0];
-            if (pdfFile) {
-                showLoading();
-                const reader = new FileReader();
-                reader.onload = async function(event) {
-                    const pdfData = new Uint8Array(event.target.result);
-                    const pdfText = await extractTextFromPDF(pdfData);
-                    performOCR(pdfText);
-                    hideLoading();
-                };
-                reader.readAsArrayBuffer(pdfFile);
-            }
-        });
-    </script>
+    <h1>PDF Text Extraction and OCR Example</h1>
+    <input type="file" accept=".pdf" id="pdfInput">
+    <div id="loading" style="display: none;">Processing...</div>
+    <div id="result"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/ocr"></script>
+    <script>
+        function extractTextFromPDF(pdfData) {
+            if (!pdfData) {
+                return '';
+            }
+
+            const pdf = await pdfjsLib.getDocument(pdfData).promise;
+            let pdfText = '';
+
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const pageText = await page.getTextContent();
+
+                pageText.items.forEach(item => {
+                    pdfText += item.str + ' ';
+                });
+            }
+
+            return pdfText;
+        }
+
+        function performOCR(text) {
+            if (!text) {
+                return [];
+            }
+
+            const ocrModel = await tf.ocr.load();
+            const result = await ocrModel.recognize(text);
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+
+            result.lines.forEach(line => {
+                const text = line.text;
+                const confidence = line.confidence;
+
+                const lineElement = document.createElement('p');
+                lineElement.textContent = `Text: ${text} (Confidence: ${confidence})`;
+
+                resultDiv.appendChild(lineElement);
+            });
+        }
+
+        document.getElementById('pdfInput').addEventListener('change', async (event) => {
+            const pdfFile = event.target.files[0];
+            if (pdfFile) {
+                document.getElementById('loading').style.display = 'block';
+
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const pdfData = new Uint8Array(event.target.result);
+                    const pdfText = await extractTextFromPDF(pdfData);
+                    await performOCR(pdfText);
+
+                    document.getElementById('loading').style.display = 'none';
+                };
+                reader.readAsArrayBuffer(pdfFile);
+            }
+        });
+    </script>
 </body>
 </html>
