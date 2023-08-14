@@ -1,83 +1,65 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Image Segmentation</title>
-    <style>
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f7f7f7;
-        padding: 20px;
-        text-align: center;
-        color: #333;
-      }
-
-      h1 {
-        margin-bottom: 20px;
-        color: #dd4b39;
-      }
-
-      #image-upload {
-        display: none;
-      }
-
-      .upload-container {
-        border: 2px dashed #ccc;
-        border-radius: 5px;
-        padding: 20px;
-        margin-bottom: 20px;
-        cursor: pointer;
-        background-color: #f2f2f2;
-      }
-
-      .upload-container:hover {
-        background-color: #e1e1e1;
-      }
-
-      .upload-container p {
-        margin-top: 0;
-      }
-
-      .uploaded-image {
-        max-width: 100%;
-        max-height: 300px;
-        margin-top: 20px;
-      }
-
-      .segmented-image {
-        max-width: 100%;
-        max-height: 300px;
-        margin-top: 20px;
-      }
-
-      .download-button {
-        margin-top: 20px;
-        display: none;
-        background-color: #dd4b39;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-      }
-
-      .download-button:hover {
-        background-color: #c63728;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Image Segmentation</h1>
-    <div class="upload-container" id="upload-container">
-      <p>Drag and drop an image here, or click to browse for an image.</p>
-    </div>
-    <input id="image-upload" type="file" accept="image/*" />
-    <div id="uploaded-image-container"></div>
-    <div id="segmented-image-container"></div>
-    <a href="#" download="segmented_image.png" id="download-button" class="download-button" style="display: none;">Download Segmented Image</a>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.10.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@3.10.0"></script>
-    <script src="script.js"></script>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Text Extraction and OCR Example</title>
+</head>
+<body>
+    <h1>PDF Text Extraction and OCR Example</h1>
+    <input type="file" accept=".pdf" id="pdfInput">
+    <div id="result"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/ocr"></script>
+    <script>
+        async function extractTextFromPDF(pdfData) {
+            const pdf = await pdfjsLib.getDocument(pdfData).promise;
+            let pdfText = '';
+            
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                const pageText = await page.getTextContent();
+                
+                pageText.items.forEach(item => {
+                    pdfText += item.str + ' ';
+                });
+            }
+            
+            return pdfText;
+        }
+        
+        async function performOCR(text) {
+            const ocrModel = await tf.ocr.load();
+            const result = await ocrModel.recognize(text);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+            
+            result.lines.forEach(line => {
+                const text = line.text;
+                const confidence = line.confidence;
+                
+                const lineElement = document.createElement('p');
+                lineElement.textContent = `Text: ${text} (Confidence: ${confidence})`;
+                
+                resultDiv.appendChild(lineElement);
+            });
+        }
+        
+        document.getElementById('pdfInput').addEventListener('change', async (event) => {
+            const pdfFile = event.target.files[0];
+            if (pdfFile) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const pdfData = new Uint8Array(event.target.result);
+                    const pdfText = await extractTextFromPDF(pdfData);
+                    performOCR(pdfText);
+                };
+                reader.readAsArrayBuffer(pdfFile);
+            }
+        });
+    </script>
+</body>
 </html>
