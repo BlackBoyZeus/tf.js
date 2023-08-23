@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pose Detection with TensorFlow.js</title>
+    <title>Body Segmentation with TensorFlow.js</title>
 </head>
 <body>
     <video id="video" width="640" height="480" autoplay></video>
     <canvas id="canvas" width="640" height="480"></canvas>
 
-    <!-- TensorFlow.js Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <!-- TensorFlow.js Libraries and Body Segmentation -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
 
     <script>
         const videoElement = document.getElementById('video');
@@ -31,45 +32,26 @@
             const video = await setupCamera();
             video.play();
 
-            const model = poseDetection.SupportedModels.MoveNet; 
-            const detector = await poseDetection.createDetector(model);
+            const model = bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation;
+            const segmenterConfig = {
+                runtime: 'mediapipe',
+                modelType: 'general'
+            };
+            const segmenter = await bodySegmentation.createSegmenter(model, segmenterConfig);
 
-            detectPoseInRealTime(video, detector);
+            segmentInRealTime(video, segmenter);
         }
 
-        async function detectPoseInRealTime(video, detector) {
-            async function poseDetectionFrame() {
-                const poses = await detector.estimatePoses(video);
-                
-                canvasCtx.drawImage(video, 0, 0, video.width, video.height);
-
-                const imageData = canvasCtx.getImageData(0, 0, video.width, video.height);
-                const data = imageData.data;
-
-                for (const pose of poses) {
-                    for (const keypoint of pose.keypoints) {
-                        if (keypoint.score > 0.5) {  // Only consider keypoints with a confidence score above 0.5
-                            const x = keypoint.x;
-                            const y = keypoint.y;
-                            const radius = 10;
-
-                            for (let i = Math.max(0, y - radius); i <= Math.min(video.height - 1, y + radius); i++) {
-                                for (let j = Math.max(0, x - radius); j <= Math.min(video.width - 1, x + radius); j++) {
-                                    const index = (i * video.width + j) * 4;
-                                    const temp = data[index];
-                                    data[index] = data[index + 2];
-                                    data[index + 2] = temp;
-                                }
-                            }
-                        }
-                    }
+        async function segmentInRealTime(video, segmenter) {
+            async function segmentationFrame() {
+                const people = await segmenter.segmentPeople(video);
+                if (people && people.length > 0) {
+                    const mask = await people[0].mask.toCanvasImageSource();
+                    canvasCtx.drawImage(mask, 0, 0, video.width, video.height);
                 }
-
-                canvasCtx.putImageData(imageData, 0, 0);
-                requestAnimationFrame(poseDetectionFrame);
+                requestAnimationFrame(segmentationFrame);
             }
-
-            poseDetectionFrame();
+            segmentationFrame();
         }
 
         bindCamera();
