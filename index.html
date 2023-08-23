@@ -3,58 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Body Segmentation with TensorFlow.js</title>
+    <title>BlazePose Pose Detection</title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+    </style>
 </head>
 <body>
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" width="640" height="480"></canvas>
 
-    <!-- TensorFlow.js Libraries and Body Segmentation -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation"></script>
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480"></canvas>
 
-    <script>
-        const videoElement = document.getElementById('video');
-        const canvasElement = document.getElementById('canvas');
-        const canvasCtx = canvasElement.getContext('2d');
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
 
-        async function setupCamera() {
-            videoElement.srcObject = await navigator.mediaDevices.getUserMedia({'video': true});
-            return new Promise((resolve) => {
-                videoElement.onloadedmetadata = () => {
-                    resolve(videoElement);
-                };
-            });
-        }
+<script>
+    async function setupCamera() {
+        const video = document.getElementById('video');
+        video.width = 640;
+        video.height = 480;
 
-        async function bindCamera() {
-            const video = await setupCamera();
-            video.play();
+        const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
+        video.srcObject = stream;
 
-            const model = bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation;
-            const segmenterConfig = {
-                runtime: 'mediapipe',
-                modelType: 'general'
+        return new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                resolve(video);
             };
-            const segmenter = await bodySegmentation.createSegmenter(model, segmenterConfig);
+        });
+    }
 
-            segmentInRealTime(video, segmenter);
-        }
+    async function bindPoseDetectionFrame() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
 
-        async function segmentInRealTime(video, segmenter) {
-            async function segmentationFrame() {
-                const people = await segmenter.segmentPeople(video);
-                if (people && people.length > 0) {
-                    const mask = await people[0].mask.toCanvasImageSource();
-                    canvasCtx.drawImage(mask, 0, 0, video.width, video.height);
+        const model = poseDetection.SupportedModels.BlazePose;
+        const detectorConfig = {
+            runtime: 'tfjs',
+            enableSmoothing: true,
+            modelType: 'full'
+        };
+        const detector = await poseDetection.createDetector(model, detectorConfig);
+
+        const estimationConfig = { flipHorizontal: true };
+
+        video.play();
+
+        async function detectPoseInRealTime() {
+            ctx.clearRect(0, 0, video.width, video.height);
+
+            const poses = await detector.estimatePoses(video, estimationConfig);
+
+            // Here, you can draw the poses on the canvas.
+            // For simplicity, let's draw a circle on each keypoint
+            poses.forEach(pose => {
+                for (let keypoint of pose.keypoints) {
+                    ctx.beginPath();
+                    ctx.arc(keypoint.x, keypoint.y, 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'blue';
+                    ctx.fill();
                 }
-                requestAnimationFrame(segmentationFrame);
-            }
-            segmentationFrame();
+            });
+
+            requestAnimationFrame(detectPoseInRealTime);
         }
 
-        bindCamera();
-    </script>
+        detectPoseInRealTime();
+    }
+
+    async function bindPage() {
+        await setupCamera();
+        bindPoseDetectionFrame();
+    }
+
+    window.onload = bindPage;
+
+</script>
+
 </body>
 </html>
