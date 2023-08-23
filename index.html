@@ -1,61 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF OCR Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose Detection with TensorFlow.js</title>
 </head>
 <body>
-    <h1>PDF OCR Example</h1>
-    <input type="file" accept=".pdf" id="pdfInput">
-    <div id="result"></div>
-    <div id="loading" style="display: none;">Processing...</div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/ocr"></script>
-    <script>
-        async function performOCR(pdfFile) {
-            const ocrModel = await tf.ocr.load();
-            
-            const reader = new FileReader();
-            reader.onload = async function(event) {
-                const pdfData = new Uint8Array(event.target.result);
-                const pdfArrayBuffer = pdfData.buffer;
-                const pdfBlob = new Blob([pdfArrayBuffer], { type: 'application/pdf' });
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                
-                const pdfImageElement = document.createElement('img');
-                pdfImageElement.src = pdfUrl;
-                
-                const resultDiv = document.getElementById('result');
-                resultDiv.innerHTML = '';
-                resultDiv.appendChild(pdfImageElement);
-                
-                const result = await ocrModel.recognize(pdfImageElement);
-                
-                result.lines.forEach(line => {
-                    const text = line.text;
-                    const confidence = line.confidence;
-                    
-                    const lineElement = document.createElement('p');
-                    lineElement.textContent = `Text: ${text} (Confidence: ${confidence})`;
-                    
-                    resultDiv.appendChild(lineElement);
-                });
-                
-                URL.revokeObjectURL(pdfUrl);
-                document.getElementById('loading').style.display = 'none';
-            };
-            reader.readAsArrayBuffer(pdfFile);
-        }
-        
-        document.getElementById('pdfInput').addEventListener('change', async (event) => {
-            const pdfFile = event.target.files[0];
-            if (pdfFile) {
-                document.getElementById('loading').style.display = 'block';
-                await performOCR(pdfFile);
-            }
-        });
-    </script>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <!-- TensorFlow.js Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
+    <script>
+      async function detectPoseInRealTime(video, detector) {
+    async function poseDetectionFrame() {
+        const poses = await detector.estimatePoses(video);
+        
+        // Draw the video frame onto the canvas
+        canvasCtx.drawImage(video, 0, 0, video.width, video.height);
+
+        // Draw circles around detected keypoints (as a mask)
+        for (const pose of poses) {
+            for (const keypoint of pose.keypoints) {
+                canvasCtx.beginPath();
+                canvasCtx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI); // Increase the radius if needed
+                canvasCtx.fillStyle = 'white';
+                canvasCtx.fill();
+            }
+        }
+
+        // Get pixel data from the canvas
+        const imageData = canvasCtx.getImageData(0, 0, video.width, video.height);
+        const data = imageData.data;
+
+        // Reverse RGB values for pixels within the mask
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] !== 0) { // If the pixel is not transparent (i.e., part of the mask)
+                const temp = data[i]; // Store red value
+                data[i] = data[i + 2]; // Assign blue value to red
+                data[i + 2] = temp; // Assign stored red value to blue
+            }
+        }
+
+        // Draw the modified pixel data back to the canvas
+        canvasCtx.putImageData(imageData, 0, 0);
+
+        requestAnimationFrame(poseDetectionFrame);
+    }
+
+    poseDetectionFrame();
+}
+
+    </script>
 </body>
 </html>
