@@ -14,45 +14,65 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
 
     <script>
-      async function detectPoseInRealTime(video, detector) {
-    async function poseDetectionFrame() {
-        const poses = await detector.estimatePoses(video);
-        
-        // Draw the video frame onto the canvas
-        canvasCtx.drawImage(video, 0, 0, video.width, video.height);
+        const videoElement = document.getElementById('video');
+        const canvasElement = document.getElementById('canvas');
+        const canvasCtx = canvasElement.getContext('2d');
 
-        // Draw circles around detected keypoints (as a mask)
-        for (const pose of poses) {
-            for (const keypoint of pose.keypoints) {
-                canvasCtx.beginPath();
-                canvasCtx.arc(keypoint.x, keypoint.y, 10, 0, 2 * Math.PI); // Increase the radius if needed
-                canvasCtx.fillStyle = 'white';
-                canvasCtx.fill();
-            }
+        async function setupCamera() {
+            videoElement.srcObject = await navigator.mediaDevices.getUserMedia({'video': true});
+            return new Promise((resolve) => {
+                videoElement.onloadedmetadata = () => {
+                    resolve(videoElement);
+                };
+            });
         }
 
-        // Get pixel data from the canvas
-        const imageData = canvasCtx.getImageData(0, 0, video.width, video.height);
-        const data = imageData.data;
+        async function bindCamera() {
+            const video = await setupCamera();
+            video.play();
 
-        // Reverse RGB values for pixels within the mask
-        for (let i = 0; i < data.length; i += 4) {
-            if (data[i + 3] !== 0) { // If the pixel is not transparent (i.e., part of the mask)
-                const temp = data[i]; // Store red value
-                data[i] = data[i + 2]; // Assign blue value to red
-                data[i + 2] = temp; // Assign stored red value to blue
-            }
+            const model = poseDetection.SupportedModels.MoveNet; 
+            const detector = await poseDetection.createDetector(model);
+
+            detectPoseInRealTime(video, detector);
         }
 
-        // Draw the modified pixel data back to the canvas
-        canvasCtx.putImageData(imageData, 0, 0);
+        async function detectPoseInRealTime(video, detector) {
+            async function poseDetectionFrame() {
+                const poses = await detector.estimatePoses(video);
+                
+                canvasCtx.drawImage(video, 0, 0, video.width, video.height);
 
-        requestAnimationFrame(poseDetectionFrame);
-    }
+                const imageData = canvasCtx.getImageData(0, 0, video.width, video.height);
+                const data = imageData.data;
 
-    poseDetectionFrame();
-}
+                for (const pose of poses) {
+                    for (const keypoint of pose.keypoints) {
+                        if (keypoint.score > 0.5) {  // Only consider keypoints with a confidence score above 0.5
+                            const x = keypoint.x;
+                            const y = keypoint.y;
+                            const radius = 10;
 
+                            for (let i = Math.max(0, y - radius); i <= Math.min(video.height - 1, y + radius); i++) {
+                                for (let j = Math.max(0, x - radius); j <= Math.min(video.width - 1, x + radius); j++) {
+                                    const index = (i * video.width + j) * 4;
+                                    const temp = data[index];
+                                    data[index] = data[index + 2];
+                                    data[index + 2] = temp;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                canvasCtx.putImageData(imageData, 0, 0);
+                requestAnimationFrame(poseDetectionFrame);
+            }
+
+            poseDetectionFrame();
+        }
+
+        bindCamera();
     </script>
 </body>
 </html>
