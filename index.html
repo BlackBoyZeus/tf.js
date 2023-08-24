@@ -1,98 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlazePose Pose Detection</title>
-    <style>
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
 
-        video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-    </style>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boxing Event Incentive Drivers</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 </head>
 <body>
+    <div style="text-align: center;">
+        <h1>Incentive Drivers for Boxing Events</h1>
+        <canvas id="canvas"></canvas>
+    </div>
 
-<video id="video" width="640" height="480" autoplay></video>
-<canvas id="canvas" width="640" height="480"></canvas>
-
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-
-<script>
-    async function setupCamera() {
-        const video = document.getElementById('video');
-        video.width = 640;
-        video.height = 480;
-
-        const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
-        video.srcObject = stream;
-
-        return new Promise((resolve) => {
-            video.onloadedmetadata = () => {
-                resolve(video);
-            };
-        });
-    }
-
-    async function bindPoseDetectionFrame() {
-        const video = document.getElementById('video');
+    <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
-        const model = poseDetection.SupportedModels.BlazePose;
-        const detectorConfig = {
-            runtime: 'tfjs',
-            enableSmoothing: true,
-            modelType: 'full'
-        };
-        const detector = await poseDetection.createDetector(model, detectorConfig);
+        // Draw the incentive drivers diagram
+        ctx.font = '16px Arial';
+        ctx.fillStyle = 'black';
 
-        const estimationConfig = { flipHorizontal: true };
+        const drivers = [
+            "Pay-Per-View Revenue",
+            "Sponsorship Deals",
+            "Ticket Sales",
+            "High-Profile Matchups",
+            "International Exposure",
+            "Media Coverage"
+        ];
 
-        video.play();
+        ctx.fillText("Incentive Drivers", 100, 30);
+        ctx.beginPath();
+        ctx.moveTo(50, 40);
+        ctx.lineTo(250, 40);
+        ctx.stroke();
 
-        async function detectPoseInRealTime() {
-            ctx.clearRect(0, 0, video.width, video.height);
-
-            const poses = await detector.estimatePoses(video, estimationConfig);
-
-            // Here, you can draw the poses on the canvas.
-            // For simplicity, let's draw a circle on each keypoint
-            poses.forEach(pose => {
-                for (let keypoint of pose.keypoints) {
-                    ctx.beginPath();
-                    ctx.arc(keypoint.x, keypoint.y, 5, 0, 2 * Math.PI);
-                    ctx.fillStyle = 'blue';
-                    ctx.fill();
-                }
-            });
-
-            requestAnimationFrame(detectPoseInRealTime);
-        }
-
-        detectPoseInRealTime();
-    }
-
-    async function bindPage() {
-        await setupCamera();
-        bindPoseDetectionFrame();
-    }
-
-    window.onload = bindPage;
-
-</script>
-
+        let y = 70;
+        drivers.forEach(driver => {
+            ctx.fillText("- " + driver, 60, y);
+            y += 30;
+        });
+    </script>
 </body>
 </html>
