@@ -14,30 +14,52 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
 
-        // Draw the incentive drivers diagram
-        ctx.font = '16px Arial';
-        ctx.fillStyle = 'black';
-
+        // Draw the incentive drivers initially
         const drivers = [
-            "Pay-Per-View Revenue",
-            "Sponsorship Deals",
-            "Ticket Sales",
-            "High-Profile Matchups",
-            "International Exposure",
-            "Media Coverage"
+            { text: "Pay-Per-View Revenue", value: "$$$" },
+            { text: "Sponsorship Deals", value: "$$" },
+            { text: "Ticket Sales", value: "$" },
+            { text: "High-Profile Matchups", value: "🥊" },
+            { text: "International Exposure", value: "🌍" },
+            { text: "Media Coverage", value: "📰" }
         ];
 
-        ctx.fillText("Incentive Drivers", 100, 30);
-        ctx.beginPath();
-        ctx.moveTo(50, 40);
-        ctx.lineTo(250, 40);
-        ctx.stroke();
+        let highlightedIndex = 0; // Index of the highlighted driver
 
-        let y = 70;
-        drivers.forEach(driver => {
-            ctx.fillText("- " + driver, 60, y);
-            y += 30;
-        });
+        function drawDrivers() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = '16px Arial';
+            ctx.fillStyle = 'black';
+
+            ctx.fillText("Incentive Drivers", 100, 30);
+            ctx.beginPath();
+            ctx.moveTo(50, 40);
+            ctx.lineTo(250, 40);
+            ctx.stroke();
+
+            let y = 70;
+            drivers.forEach((driver, index) => {
+                if (index === highlightedIndex) {
+                    ctx.fillStyle = 'blue'; // Highlight the selected driver
+                } else {
+                    ctx.fillStyle = 'black';
+                }
+                ctx.fillText("- " + driver.text, 60, y);
+                ctx.fillText(driver.value, 220, y); // Display the value
+                y += 30;
+            });
+
+            highlightedIndex = (highlightedIndex + 1) % drivers.length; // Cycle through drivers
+        }
+
+        // Animate the pulse visualization
+        function animate() {
+            drawDrivers();
+            requestAnimationFrame(animate);
+        }
+
+        animate(); // Start the animation loop
     </script>
 </body>
 </html>
