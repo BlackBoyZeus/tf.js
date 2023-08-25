@@ -1,37 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Face Detection with Webcam</title>
+    <title>Boxing Event Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
 </head>
 <body>
     <div style="text-align: center;">
-        <h1>Face Detection with Webcam</h1>
-        <video id="webcam" autoplay playsinline></video>
-        <canvas id="canvas" width="640" height="480"></canvas>
+        <h1>Incentive Drivers for Boxing Events</h1>
+        <canvas id="canvas" width="300" height="300"></canvas>
     </div>
 
     <script>
-        async function setupCamera() {
-            const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Draw the incentive drivers diagram
+        ctx.font = '16px Arial';
+        ctx.fillStyle = 'black';
+
+        const drivers = [
+            "Pay-Per-View Revenue",
+            "Sponsorship Deals",
+            "Ticket Sales",
+            "High-Profile Matchups",
+            "International Exposure",
+            "Media Coverage"
+        ];
+
+        ctx.fillText("Incentive Drivers", 100, 30);
+        ctx.beginPath();
+        ctx.moveTo(50, 40);
+        ctx.lineTo(250, 40);
+        ctx.stroke();
+
+        let y = 70;
+        drivers.forEach(driver => {
+            ctx.fillText("- " + driver, 60, y);
+            y += 30;
+        });
+
+        async function detectFaces() {
+            const video = document.createElement('video');
+            document.body.appendChild(video);
+            video.style.display = 'none';
 
             const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
             video.srcObject = stream;
 
-            return new Promise((resolve) => {
-                video.onloadedmetadata = () => {
-                    resolve(video);
-                };
-            });
-        }
-
-        async function detectFaces() {
-            const video = await setupCamera();
-            video.play();
-
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
+            await video.play();
 
             const faceDetector = new faceDetection.FaceDetector({
                 modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
