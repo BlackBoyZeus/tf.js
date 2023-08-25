@@ -1,49 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Boxing Event Incentive Drivers</title>
+    <title>Face Detection with Webcam</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
 </head>
 <body>
     <div style="text-align: center;">
-        <h1>Incentive Drivers for Boxing Events</h1>
-        <canvas id="canvas" width="300" height="300"></canvas>
-        <video id="video" autoplay playsinline></video>
+        <h1>Face Detection with Webcam</h1>
+        <video id="webcam" autoplay playsinline></video>
+        <canvas id="canvas" width="640" height="480"></canvas>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // Draw the incentive drivers diagram
-        ctx.font = '16px Arial';
-        ctx.fillStyle = 'black';
-
-        const drivers = [
-            "Pay-Per-View Revenue",
-            "Sponsorship Deals",
-            "Ticket Sales",
-            "High-Profile Matchups",
-            "International Exposure",
-            "Media Coverage"
-        ];
-
-        ctx.fillText("Incentive Drivers", 100, 30);
-        ctx.beginPath();
-        ctx.moveTo(50, 40);
-        ctx.lineTo(250, 40);
-        ctx.stroke();
-
-        let y = 70;
-        drivers.forEach(driver => {
-            ctx.fillText("- " + driver, 60, y);
-            y += 30;
-        });
-
-        // Webcam and face detection integration
-        const video = document.getElementById('video');
-
         async function setupCamera() {
+            const video = document.getElementById('webcam');
+
             const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
             video.srcObject = stream;
 
@@ -55,32 +27,27 @@
         }
 
         async function detectFaces() {
-            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-            const detectorConfig = {
-                runtime: 'tfjs',
-                maxFaces: 1,
-                modelType: 'short'
-            };
-            const detector = await faceDetection.createDetector(model, detectorConfig);
-
-            const estimationConfig = { flipHorizontal: false };
-
             const video = await setupCamera();
             video.play();
 
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const faceDetector = new faceDetection.FaceDetector({
+                modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
+            });
+
             async function renderPrediction() {
-                const faces = await detector.estimateFaces(video, estimationConfig);
+                const faces = await faceDetector.estimateFaces(video);
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 faces.forEach(face => {
-                    const start = face.boundingBox.startPoint;
-                    const end = face.boundingBox.endPoint;
-                    const size = [end[0] - start[0], end[1] - start[1]];
+                    const boundingBox = face.boundingBox;
                     ctx.strokeStyle = '#00FF00';
                     ctx.lineWidth = 2;
-                    ctx.strokeRect(start[0], start[1], size[0], size[1]);
+                    ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
                 });
 
                 requestAnimationFrame(renderPrediction);
