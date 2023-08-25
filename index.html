@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Boxing Event Incentive Drivers</title>
+    <title>Facial Landmarks Detection with Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
@@ -22,7 +22,7 @@
             </ul>
         </div>
         <div style="flex: 2;">
-            <h1>Real-time Facial Detection with Landmarks</h1>
+            <h1>Real-time Facial Landmarks Detection</h1>
             <video id="webcam" autoplay playsinline></video>
             <canvas id="canvas" width="640" height="480"></canvas>
         </div>
@@ -42,7 +42,7 @@
             });
         }
 
-        async function detectFaces() {
+        async function detectFacialLandmarks() {
             const video = await setupCamera();
             video.play();
 
@@ -60,21 +60,19 @@
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
 
-                const faces = await detector.estimateFaces(video);
+                const faces = await detector.estimateFaces({input: video});
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 faces.forEach(face => {
-                    const boundingBox = face.boundingBox;
-                    ctx.strokeStyle = '#00FF00';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(boundingBox.xMin, boundingBox.yMin, boundingBox.width, boundingBox.height);
+                    const keypoints = face.scaledMesh;
 
-                    face.keypoints.forEach(keypoint => {
+                    for (let i = 0; i < keypoints.length; i++) {
+                        const [x, y] = keypoints[i];
                         ctx.fillStyle = '#FF0000';
-                        ctx.fillRect(keypoint.x, keypoint.y, 5, 5);
-                    });
+                        ctx.fillRect(x, y, 2, 2);
+                    }
                 });
 
                 requestAnimationFrame(renderPrediction);
@@ -83,7 +81,7 @@
             renderPrediction();
         }
 
-        detectFaces();
+        detectFacialLandmarks();
     </script>
 </body>
 </html>
