@@ -4,11 +4,9 @@
     <title>Boxing Event Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_landmarks"></script>
 </head>
 <body>
     <div style="display: flex; align-items: flex-start;">
@@ -51,19 +49,12 @@
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            const faceDetector = new faceDetection.FaceDetector({
+            const faceDetection = new faceDetection.FaceDetection({
                 modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
             });
 
-            const faceLandmarks = new faceLandmarks.FaceLandmarks({
-                modelUrl: faceLandmarks.SupportedModels.MediaPipeFaceLandmark
-            });
-
             async function renderPrediction() {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-
-                const faces = await faceDetector.estimateFaces(video);
+                const faces = await faceDetection.estimateFaces(video);
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -73,13 +64,6 @@
                     ctx.strokeStyle = '#00FF00';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-
-                    const landmarks = faceLandmarks.estimateLandmarks(face);
-
-                    landmarks.forEach(landmark => {
-                        ctx.fillStyle = '#FF0000';
-                        ctx.fillRect(landmark.x, landmark.y, 5, 5);
-                    });
                 });
 
                 requestAnimationFrame(renderPrediction);
