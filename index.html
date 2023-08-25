@@ -5,8 +5,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
 </head>
 <body>
     <div style="display: flex; align-items: flex-start;">
@@ -22,7 +22,7 @@
             </ul>
         </div>
         <div style="flex: 2;">
-            <h1>Real-time Face Detection with Landmarks</h1>
+            <h1>Real-time Facial Detection with Landmarks</h1>
             <video id="webcam" autoplay playsinline></video>
             <canvas id="canvas" width="640" height="480"></canvas>
         </div>
@@ -49,12 +49,12 @@
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+            const model = faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
             const detectorConfig = {
                 runtime: 'mediapipe',
-                solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_detection',
+                solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
             };
-            const detector = await faceDetection.createDetector(model, detectorConfig);
+            const detector = await faceLandmarksDetection.createDetector(model, detectorConfig);
 
             async function renderPrediction() {
                 canvas.width = video.videoWidth;
