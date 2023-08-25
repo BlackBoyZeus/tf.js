@@ -3,15 +3,6 @@
 <head>
     <title>Boxing Event Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl">
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation">
-
-<!-- Optional: Include below scripts if you want to use TensorFlow.js runtime. -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter">
-
-<!-- Optional: Include below scripts if you want to use MediaPipe runtime. -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation">
 </head>
 <body>
     <div style="text-align: center;">
@@ -21,46 +12,22 @@
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // Draw the incentive drivers initially
-        const drivers = [
-            { text: "Pay-Per-View Revenue", value: "$$$" },
-            { text: "Sponsorship Deals", value: "$$" },
-            { text: "Ticket Sales", value: "$" },
-            { text: "High-Profile Matchups", value: "🥊" },
-            { text: "International Exposure", value: "🌍" },
-            { text: "Media Coverage", value: "📰" }
-        ];
-
-        let highlightedIndex = 0; // Index of the highlighted driver
+@@ -28,10 +29,8 @@ <h1>Incentive Drivers for Boxing Events</h1>
 
         function drawDrivers() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             ctx.font = '16px Arial';
             ctx.fillStyle = 'black';
+
             ctx.fillText("Incentive Drivers", 100, 30);
             ctx.beginPath();
             ctx.moveTo(50, 40);
-            ctx.lineTo(250, 40);
-            ctx.stroke();
-
-            let y = 70;
-            drivers.forEach((driver, index) => {
-                if (index === highlightedIndex) {
-                    ctx.fillStyle = 'blue'; // Highlight the selected driver
-                } else {
-                    ctx.fillStyle = 'black';
-                }
-                ctx.fillText("- " + driver.text, 60, y);
-                ctx.fillText(driver.value, 220, y); // Display the value
-                y += 30;
-            });
-
+@@ -53,13 +52,48 @@ <h1>Incentive Drivers for Boxing Events</h1>
             highlightedIndex = (highlightedIndex + 1) % drivers.length; // Cycle through drivers
         }
 
+        // Animate the pulse visualization
         function animate() {
             drawDrivers();
             requestAnimationFrame(animate);
@@ -71,7 +38,7 @@
         // TensorFlow.js model inference setup
 
         let model;
-        tf.loadGraphModel('model.json').then(loadedModel => {
+        tf.loadGraphModel('PATH_TO_YOUR_MODEL/model.json').then(loadedModel => {
             model = loadedModel;
         });
 
@@ -105,4 +72,5 @@
 
     </script>
 </body>
-</html> 
+</html>
+</html>
