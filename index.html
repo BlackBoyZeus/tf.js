@@ -4,54 +4,55 @@
     <title>Boxing Event Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_landmarks"></script>
 </head>
 <body>
-    <div style="text-align: center;">
-        <h1>Incentive Drivers for Boxing Events</h1>
-        <canvas id="canvas" width="300" height="300"></canvas>
+    <div style="display: flex; align-items: flex-start;">
+        <div style="flex: 1; padding: 20px;">
+            <h1>Incentive Drivers for Boxing Events</h1>
+            <ul>
+                <li>Pay-Per-View Revenue</li>
+                <li>Sponsorship Deals</li>
+                <li>Ticket Sales</li>
+                <li>High-Profile Matchups</li>
+                <li>International Exposure</li>
+                <li>Media Coverage</li>
+            </ul>
+        </div>
+        <div style="flex: 2;">
+            <h1>Real-time Face Detection with Landmarks</h1>
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="canvas" width="640" height="480"></canvas>
+        </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // Draw the incentive drivers diagram
-        ctx.font = '16px Arial';
-        ctx.fillStyle = 'black';
-
-        const drivers = [
-            "Pay-Per-View Revenue",
-            "Sponsorship Deals",
-            "Ticket Sales",
-            "High-Profile Matchups",
-            "International Exposure",
-            "Media Coverage"
-        ];
-
-        ctx.fillText("Incentive Drivers", 100, 30);
-        ctx.beginPath();
-        ctx.moveTo(50, 40);
-        ctx.lineTo(250, 40);
-        ctx.stroke();
-
-        let y = 70;
-        drivers.forEach(driver => {
-            ctx.fillText("- " + driver, 60, y);
-            y += 30;
-        });
-
-        async function detectFaces() {
-            const video = document.createElement('video');
-            document.body.appendChild(video);
-            video.style.display = 'none';
+        async function setupCamera() {
+            const video = document.getElementById('webcam');
 
             const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
             video.srcObject = stream;
 
-            await video.play();
+            return new Promise((resolve) => {
+                video.onloadedmetadata = () => {
+                    resolve(video);
+                };
+            });
+        }
+
+        async function detectFaces() {
+            const video = await setupCamera();
+            video.play();
+
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
 
             const faceDetector = new faceDetection.FaceDetector({
                 modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
+            });
+
+            const faceLandmarks = new faceLandmarks.FaceLandmarks({
+                modelUrl: faceLandmarks.SupportedModels.MediaPipeFaceLandmark
             });
 
             async function renderPrediction() {
@@ -65,6 +66,13 @@
                     ctx.strokeStyle = '#00FF00';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+
+                    const landmarks = faceLandmarks.estimateLandmarks(face);
+
+                    landmarks.forEach(landmark => {
+                        ctx.fillStyle = '#FF0000';
+                        ctx.fillRect(landmark.x, landmark.y, 5, 5);
+                    });
                 });
 
                 requestAnimationFrame(renderPrediction);
