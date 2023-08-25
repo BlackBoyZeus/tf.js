@@ -3,8 +3,11 @@
 <head>
     <title>Boxing Event Incentive Drivers</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_landmarks"></script>
 </head>
 <body>
     <div style="display: flex; align-items: flex-start;">
@@ -51,7 +54,7 @@
                 modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
             });
 
-            const faceLandmarks = new faceLandmarks.FaceLandmarks({
+            const faceLandmarks = new faceDetection.FaceLandmarks({
                 modelUrl: faceLandmarks.SupportedModels.MediaPipeFaceLandmark
             });
 
