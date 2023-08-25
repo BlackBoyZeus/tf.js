@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Boxing Event Incentive Drivers</title>
+    <title>Boxing Event Incentive Drivers with Selfie Segmentation</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation"></script>
 </head>
 <body>
     <div style="text-align: center;">
-        <h1>Incentive Drivers for Boxing Events</h1>
-        <canvas id="canvas" width="300" height="300"></canvas>
+        <h1>Incentive Drivers for Boxing Events with Selfie Segmentation</h1>
+        <canvas id="canvas" width="640" height="480"></canvas>
         <video id="webcam" autoplay width="640" height="480"></video>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const webcamElement = document.getElementById('webcam');
+        let segmenter;
 
         // Draw the incentive drivers initially
         const drivers = [
@@ -52,21 +56,32 @@
             highlightedIndex = (highlightedIndex + 1) % drivers.length; // Cycle through drivers
         }
 
-        function animate() {
-            drawDrivers();
-            requestAnimationFrame(animate);
+        async function initializeSegmenter() {
+            const model = bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation;
+            const segmenterConfig = {
+                runtime: 'mediapipe',
+                modelType: 'general'
+            };
+            segmenter = await bodySegmentation.createSegmenter(model, segmenterConfig);
         }
 
-        animate(); // Start the animation loop
+        async function predict() {
+            const webcamFrame = tf.browser.fromPixels(webcamElement).toFloat();
+            const people = await segmenter.segmentPeople(webcamElement);
 
-        // TensorFlow.js model inference setup
+            const foregroundColor = { r: 0, g: 0, b: 0, a: 0 };
+            const backgroundColor = { r: 0, g: 0, b: 0, a: 255 };
+            const drawContour = true;
+            const foregroundThreshold = 0.6;
 
-        let model;
-        tf.loadGraphModel('model.json').then(loadedModel => {
-            model = loadedModel;
-        });
+            const backgroundDarkeningMask = await bodySegmentation.toBinaryMask(people, foregroundColor, backgroundColor, drawContour, foregroundThreshold);
+            const opacity = 0.7;
+            const maskBlurAmount = 3;
 
-        const webcamElement = document.getElementById('webcam');
+            await bodySegmentation.drawMask(canvas, webcamElement, backgroundDarkeningMask, opacity, maskBlurAmount);
+
+            webcamFrame.dispose();
+        }
 
         async function setupWebcam() {
             const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
@@ -78,16 +93,8 @@
             });
         }
 
-        async function predict() {
-            const webcamFrame = tf.browser.fromPixels(webcamElement).toFloat();
-            const resizedFrame = tf.image.resizeBilinear(webcamFrame, [YOUR_MODEL_INPUT_HEIGHT, YOUR_MODEL_INPUT_WIDTH]);
-            const predictions = model.predict(resizedFrame);
-            webcamFrame.dispose();
-            resizedFrame.dispose();
-            requestAnimationFrame(predict);
-        }
-
         async function bindPage() {
+            await initializeSegmenter();
             await setupWebcam();
             predict();
         }
@@ -97,3 +104,4 @@
     </script>
 </body>
 </html>
+
