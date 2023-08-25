@@ -8,23 +8,13 @@
     <div style="text-align: center;">
         <h1>Incentive Drivers for Boxing Events</h1>
         <canvas id="canvas" width="300" height="300"></canvas>
+        <video id="webcam" autoplay width="640" height="480"></video>
     </div>
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-
-        // Draw the incentive drivers diagram
-        ctx.font = '16px Arial';
-        ctx.fillStyle = 'black';
-
         // Draw the incentive drivers initially
         const drivers = [
-            "Pay-Per-View Revenue",
-            "Sponsorship Deals",
-            "Ticket Sales",
-            "High-Profile Matchups",
-            "International Exposure",
-            "Media Coverage"
             { text: "Pay-Per-View Revenue", value: "$$$" },
             { text: "Sponsorship Deals", value: "$$" },
             { text: "Ticket Sales", value: "$" },
@@ -32,32 +22,16 @@
             { text: "International Exposure", value: "🌍" },
             { text: "Media Coverage", value: "📰" }
         ];
-
-        ctx.fillText("Incentive Drivers", 100, 30);
-        ctx.beginPath();
-        ctx.moveTo(50, 40);
-        ctx.lineTo(250, 40);
-        ctx.stroke();
-
-        let y = 70;
-        drivers.forEach(driver => {
-            ctx.fillText("- " + driver, 60, y);
-            y += 30;
-        });
         let highlightedIndex = 0; // Index of the highlighted driver
-
         function drawDrivers() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.font = '16px Arial';
             ctx.fillStyle = 'black';
-
             ctx.fillText("Incentive Drivers", 100, 30);
             ctx.beginPath();
             ctx.moveTo(50, 40);
             ctx.lineTo(250, 40);
             ctx.stroke();
-
             let y = 70;
             drivers.forEach((driver, index) => {
                 if (index === highlightedIndex) {
@@ -69,17 +43,44 @@
                 ctx.fillText(driver.value, 220, y); // Display the value
                 y += 30;
             });
-
             highlightedIndex = (highlightedIndex + 1) % drivers.length; // Cycle through drivers
         }
-
-        // Animate the pulse visualization
         function animate() {
             drawDrivers();
             requestAnimationFrame(animate);
         }
-
         animate(); // Start the animation loop
+        // TensorFlow.js model inference setup
+
+        let model;
+        tf.loadGraphModel('PATH_TO_YOUR_MODEL/model.json').then(loadedModel => {
+        tf.loadGraphModel('model.json').then(loadedModel => {
+            model = loadedModel;
+        });
+
+        const webcamElement = document.getElementById('webcam');
+        async function setupWebcam() {
+            const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
+            webcamElement.srcObject = stream;
+            return new Promise((resolve) => {
+                webcamElement.onloadedmetadata = () => {
+                    resolve(webcamElement);
+                };
+            });
+        }
+        async function predict() {
+            const webcamFrame = tf.browser.fromPixels(webcamElement).toFloat();
+            const resizedFrame = tf.image.resizeBilinear(webcamFrame, [YOUR_MODEL_INPUT_HEIGHT, YOUR_MODEL_INPUT_WIDTH]);
+            const predictions = model.predict(resizedFrame);
+            webcamFrame.dispose();
+            resizedFrame.dispose();
+            requestAnimationFrame(predict);
+        }
+        async function bindPage() {
+            await setupWebcam();
+            predict();
+        }
+        window.onload = bindPage;
     </script>
 </body>
 </html>
