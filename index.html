@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_landmarks"></script>
 </head>
 <body>
     <div style="display: flex; align-items: flex-start;">
@@ -54,11 +55,14 @@
                 modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
             });
 
-            const faceLandmarks = new faceDetection.FaceLandmarks({
+            const faceLandmarks = new faceLandmarks.FaceLandmarks({
                 modelUrl: faceLandmarks.SupportedModels.MediaPipeFaceLandmark
             });
 
             async function renderPrediction() {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
                 const faces = await faceDetector.estimateFaces(video);
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
