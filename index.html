@@ -122,14 +122,11 @@
                 }
 
                 // Check for hand interaction
+                let handParts = [...segmentation.bodyParts.leftHand, ...segmentation.bodyParts.rightHand];
                 bubbles.forEach(bubble => {
-                    if (segmentation.bodyParts.leftHand.some(p => bubble.contains(p.x, p.y)) || segmentation.bodyParts.rightHand.some(p => bubble.contains(p.x, p.y))) {
-                        bubble.hovered = true;
-                        bubble.d = 60;
-                    } else {
-                        bubble.hovered = false;
-                        bubble.d = 50;
-                    }
+                    bubble.hovered = handParts.some(p => bubble.contains(p.x, p.y));
+                    if (bubble.hovered) bubble.d = 60;
+                    else bubble.d = 50;
                     bubble.show();
                 });
             }
