@@ -1,78 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boxing Event Incentive Drivers</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ml5/0.6.0/ml5.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            transition: background-color 1s;
+        }
+
+        .content {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            color: white;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            font-size: 1.5em;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        #driver6 { opacity: 1; } /* Always show the last driver */
+
+    </style>
 </head>
 <body>
-    <div style="display: flex; align-items: flex-start;">
-        <div style="flex: 1; padding: 20px;">
-            <h1>Incentive Drivers for Boxing Events</h1>
-            <ul>
-                <li>Pay-Per-View Revenue</li>
-                <li>Sponsorship Deals</li>
-                <li>Ticket Sales</li>
-                <li>High-Profile Matchups</li>
-                <li>International Exposure</li>
-                <li>Media Coverage</li>
-            </ul>
-        </div>
-        <div style="flex: 2;">
-            <h1>Real-time Face Detection with Landmarks</h1>
-            <video id="webcam" autoplay playsinline></video>
-            <canvas id="canvas" width="640" height="480"></canvas>
-        </div>
+    <div class="content">
+        <h1>Face Morph Game</h1>
+        <p>Get close to unlock Boxing Event Incentive Drivers!</p>
+        <ul>
+            <li id="driver1">Pay-Per-View Revenue</li>
+            <li id="driver2">Sponsorship Deals</li>
+            <li id="driver3">Ticket Sales</li>
+            <li id="driver4">High-Profile Matchups</li>
+            <li id="driver5">International Exposure</li>
+            <li id="driver6">Media Coverage</li>
+        </ul>
     </div>
-
     <script>
-        async function setupCamera() {
-            const video = document.getElementById('webcam');
+        let video;
+        let faceApi;
+        let detections = [];
 
-            const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
-            video.srcObject = stream;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            video = createCapture(VIDEO);
+            video.size(width, height);
+            video.hide();
 
-            return new Promise((resolve) => {
-                video.onloadedmetadata = () => {
-                    resolve(video);
-                };
-            });
+            const options = {
+                withLandmarks: true,
+            };
+            faceApi = ml5.faceApi(video, options, modelReady);
         }
 
-        async function detectFaces() {
-            const video = await setupCamera();
-            video.play();
+        function modelReady() {
+            faceApi.detect(gotResults);
+        }
 
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-
-            const faceDetection = new faceDetection.FaceDetection({
-                modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
-            });
-
-            async function renderPrediction() {
-                const faces = await faceDetection.estimateFaces(video);
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                faces.forEach(face => {
-                    const boundingBox = face.boundingBox;
-                    ctx.strokeStyle = '#00FF00';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
-                });
-
-                requestAnimationFrame(renderPrediction);
+        function gotResults(err, result) {
+            if (err) {
+                console.error(err);
+                return;
             }
-
-            renderPrediction();
+            detections = result;
+            faceApi.detect(gotResults);
         }
 
-        detectFaces();
+        function draw() {
+            background(50);
+
+            if (detections && detections.length > 0) {
+                const faceSize = detections[0].alignedRect._box._width * detections[0].alignedRect._box._height;
+                const energyLevel = map(faceSize, 10000, 640 * 480 * 0.6, 0, 255);
+                document.body.style.backgroundColor = `rgb(${energyLevel}, 50, 255)`;
+
+                // Unlock drivers based on distance
+                if (energyLevel > 40) document.getElementById("driver1").style.opacity = 1;
+                if (energyLevel > 80) document.getElementById("driver2").style.opacity = 1;
+                if (energyLevel > 120) document.getElementById("driver3").style.opacity = 1;
+                if (energyLevel > 160) document.getElementById("driver4").style.opacity = 1;
+                if (energyLevel > 200) document.getElementById("driver5").style.opacity = 1;
+
+                drawLandmarks(detections);
+            }
+        }
+
+        function drawLandmarks(detections) {
+            for (let i = 0; i < detections.length; i++) {
+                const points = detections[i].landmarks.positions;
+                for (let j = 0; j < points.length; j++) {
+                    const x = points[j]._x;
+                    const y = points[j]._y;
+                    fill(255, 0, 0);
+                    ellipse(x, y, 5);
+
+                    stroke(255);
+                    line(x, y, width / 2, height / 2);
+                }
+            }
+        }
+
     </script>
 </body>
 </html>
