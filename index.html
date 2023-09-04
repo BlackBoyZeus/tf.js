@@ -4,15 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Boxing Event Incentive Drivers with BodyPix">
+    <meta name="keywords" content="Boxing, Event, Incentive, Drivers, BodyPix, Interactive">
+    <meta name="author" content="Your Name Here">
+
     <title>Boxing Event Incentive Drivers with BodyPix</title>
-    <!-- p5 -->
+
+    <!-- Add a favicon for your website -->
+    <link rel="icon" type="image/png" href="path_to_favicon.png"/>
+
+    <!-- p5 Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
-    <!-- ml5 -->
+
+    <!-- ml5 Library -->
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+
+    <!-- Styles -->
     <style>
         body {
             overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
         #info {
@@ -21,6 +33,9 @@
             left: 10px;
             color: white;
             z-index: 2;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
         }
 
         canvas {
@@ -58,11 +73,14 @@
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
+            setupVideo();
+            bodypix = ml5.bodyPix(video, options, modelReady);
+        }
+
+        function setupVideo() {
             video = createCapture(VIDEO);
             video.size(width, height);
             video.hide();
-
-            bodypix = ml5.bodyPix(video, options, modelReady);
         }
 
         function modelReady() {
@@ -71,38 +89,42 @@
 
         function gotResults(error, result) {
             if (error) {
-                console.log(error);
+                console.error(error);
                 return;
             }
             segmentation = result;
             bodypix.segment(gotResults);
         }
 
+        function drawGradientEffect() {
+            for (let i = 0; i <= width; i += 10) {
+                let inter = map(i, 0, width, 0, 1);
+                let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
+                stroke(c);
+                line(i, 0, i, height);
+            }
+        }
+
+        function drawIncentiveDriversBubbles() {
+            for (let i = 0; i < drivers.length; i++) {
+                let x = (i + 1) * width / (drivers.length + 1);
+                let y = height / 2 + 50 * sin(0.1 * frameCount + i);
+                let d = 50 + 10 * sin(0.1 * frameCount + i);
+
+                fill(255);
+                ellipse(x, y, d);
+                textAlign(CENTER, CENTER);
+                textSize(16);
+                text(drivers[i], x, y);
+            }
+        }
+
         function draw() {
             background(0);
             if (segmentation) {
                 image(segmentation.personMask, 0, 0, width, height);
-
-                // Gradient effect
-                for (let i = 0; i <= width; i += 10) {
-                    let inter = map(i, 0, width, 0, 1);
-                    let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
-                    stroke(c);
-                    line(i, 0, i, height);
-                }
-
-                // Display incentive drivers as bubbles
-                for (let i = 0; i < drivers.length; i++) {
-                    let x = (i + 1) * width / (drivers.length + 1);
-                    let y = height / 2 + 50 * sin(0.1 * frameCount + i);
-                    let d = 50 + 10 * sin(0.1 * frameCount + i);
-
-                    fill(255);
-                    ellipse(x, y, d);
-                    textAlign(CENTER, CENTER);
-                    textSize(16);
-                    text(drivers[i], x, y);
-                }
+                drawGradientEffect();
+                drawIncentiveDriversBubbles();
             }
         }
     </script>
