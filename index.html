@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boxing Event Incentive Drivers</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
-    <script src="http://localhost:8080/ml5.js"></script>
+    <title>Boxing Event Incentive Drivers with BodyPix</title>
+    <!-- p5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
+    <!-- ml5 -->
+    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
     <style>
         body {
             overflow: hidden;
@@ -28,10 +31,12 @@
         }
     </style>
 </head>
+
 <body>
     <div id="info">
-        <h2>Move closer and grab the floating bubbles to unlock Boxing Event Incentive Drivers!</h2>
+        <h2>Move closer to the camera and try to grab the floating bubbles to unlock Boxing Event Incentive Drivers!</h2>
     </div>
+
     <script>
         let bodypix;
         let video;
@@ -51,17 +56,17 @@
             "Media Coverage"
         ];
 
-        function preload() {
-            bodypix = ml5.bodyPix(options);
-        }
-
         function setup() {
             createCanvas(windowWidth, windowHeight);
             video = createCapture(VIDEO);
             video.size(width, height);
             video.hide();
 
-            bodypix.segment(video, gotResults);
+            bodypix = ml5.bodyPix(video, options, modelReady);
+        }
+
+        function modelReady() {
+            bodypix.segment(gotResults);
         }
 
         function gotResults(error, result) {
@@ -70,7 +75,7 @@
                 return;
             }
             segmentation = result;
-            bodypix.segment(video, gotResults);
+            bodypix.segment(gotResults);
         }
 
         function draw() {
@@ -79,7 +84,7 @@
                 image(segmentation.personMask, 0, 0, width, height);
 
                 // Gradient effect
-                for (let i = 0; i <= width; i+=10) {
+                for (let i = 0; i <= width; i += 10) {
                     let inter = map(i, 0, width, 0, 1);
                     let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
                     stroke(c);
@@ -102,4 +107,5 @@
         }
     </script>
 </body>
+
 </html>
