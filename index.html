@@ -7,6 +7,7 @@
     <title>Boxing Event Incentive Drivers with BodyPix</title>
     <!-- p5 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
     <!-- ml5 -->
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
     <style>
@@ -33,14 +34,13 @@
 
 <body>
     <div id="info">
-        <h2>Move closer and try to grab the floating bubbles to unlock Boxing Event Incentive Drivers!</h2>
+        <h2>Move closer to the camera and try to grab the floating bubbles to unlock Boxing Event Incentive Drivers!</h2>
     </div>
 
     <script>
         let bodypix;
         let video;
         let segmentation;
-        let bubbles = [];
 
         const options = {
             outputStride: 16,
@@ -56,30 +56,6 @@
             "Media Coverage"
         ];
 
-        class Bubble {
-            constructor(txt, x, y) {
-                this.txt = txt;
-                this.x = x;
-                this.y = y;
-                this.d = 50;
-                this.hovered = false;
-            }
-
-            show() {
-                fill(this.hovered ? 100 : 255);
-                ellipse(this.x, this.y, this.d);
-                fill(0);
-                textSize(16);
-                textAlign(CENTER, CENTER);
-                text(this.txt, this.x, this.y);
-            }
-
-            contains(px, py) {
-                let d = dist(px, py, this.x, this.y);
-                return d < this.d / 2;
-            }
-        }
-
         function setup() {
             createCanvas(windowWidth, windowHeight);
             video = createCapture(VIDEO);
@@ -87,12 +63,6 @@
             video.hide();
 
             bodypix = ml5.bodyPix(video, options, modelReady);
-
-            for (let i = 0; i < drivers.length; i++) {
-                let x = (i + 1) * width / (drivers.length + 1);
-                let y = height / 2 + 50 * sin(0.1 * frameCount + i);
-                bubbles.push(new Bubble(drivers[i], x, y));
-            }
         }
 
         function modelReady() {
@@ -121,14 +91,18 @@
                     line(i, 0, i, height);
                 }
 
-                // Check for hand interaction
-                let handParts = [...segmentation.bodyParts.leftHand, ...segmentation.bodyParts.rightHand];
-                bubbles.forEach(bubble => {
-                    bubble.hovered = handParts.some(p => bubble.contains(p.x, p.y));
-                    if (bubble.hovered) bubble.d = 60;
-                    else bubble.d = 50;
-                    bubble.show();
-                });
+                // Display incentive drivers as bubbles
+                for (let i = 0; i < drivers.length; i++) {
+                    let x = (i + 1) * width / (drivers.length + 1);
+                    let y = height / 2 + 50 * sin(0.1 * frameCount + i);
+                    let d = 50 + 10 * sin(0.1 * frameCount + i);
+
+                    fill(255);
+                    ellipse(x, y, d);
+                    textAlign(CENTER, CENTER);
+                    textSize(16);
+                    text(drivers[i], x, y);
+                }
             }
         }
     </script>
