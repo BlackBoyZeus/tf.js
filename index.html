@@ -10,61 +10,53 @@
         body {
             font-family: 'Arial', sans-serif;
             transition: background-color 1s;
+            overflow: hidden;
         }
 
-        .content {
-            text-align: center;
+        #info {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
+            top: 10px;
+            left: 10px;
             color: white;
-        }
-
-        .score {
-            font-size: 24px;
-            font-weight: bold;
+            z-index: 2;
         }
 
         canvas {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             z-index: 1;
         }
 
-        ul {
-            list-style-type: none;
+        .driver {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            transform: scale(0);
+            transition: transform 0.5s;
         }
-
-        li {
-            font-size: 1.5em;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-
-        #driver6 { opacity: 1; } /* Always show the last driver */
-
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Face Morph Game</h1>
-        <p>Get close to unlock Boxing Event Incentive Drivers!</p>
-        <ul>
-            <li id="driver1">Pay-Per-View Revenue</li>
-            <li id="driver2">Sponsorship Deals</li>
-            <li id="driver3">Ticket Sales</li>
-            <li id="driver4">High-Profile Matchups</li>
-            <li id="driver5">International Exposure</li>
-            <li id="driver6">Media Coverage</li>
-        </ul>
+    <div id="info">
+        <h2>Get closer to unlock the Boxing Event Incentive Drivers!</h2>
     </div>
+
+    <!-- Incentive Drivers -->
+    <div class="driver" id="driver1" style="top: 10%; left: 15%;">Pay-Per-View Revenue</div>
+    <div class="driver" id="driver2" style="top: 20%; left: 70%;">Sponsorship Deals</div>
+    <div class="driver" id="driver3" style="top: 40%; left: 10%;">Ticket Sales</div>
+    <div class="driver" id="driver4" style="top: 50%; right: 15%;">High-Profile Matchups</div>
+    <div class="driver" id="driver5" style="bottom: 20%; left: 30%;">International Exposure</div>
+    <div class="driver" id="driver6" style="bottom: 10%; right: 20%;">Media Coverage</div>
+
     <script>
         let video;
         let faceApi;
         let detections = [];
+        const maxDrivers = 6;
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
@@ -99,12 +91,11 @@
                 const energyLevel = map(faceSize, 10000, 640 * 480 * 0.6, 0, 255);
                 document.body.style.backgroundColor = `rgb(${energyLevel}, 50, 255)`;
 
-                // Unlock drivers based on distance
-                if (energyLevel > 40) document.getElementById("driver1").style.opacity = 1;
-                if (energyLevel > 80) document.getElementById("driver2").style.opacity = 1;
-                if (energyLevel > 120) document.getElementById("driver3").style.opacity = 1;
-                if (energyLevel > 160) document.getElementById("driver4").style.opacity = 1;
-                if (energyLevel > 200) document.getElementById("driver5").style.opacity = 1;
+                // Unlock drivers based on face landmarks
+                const points = detections[0].landmarks.positions;
+                for (let i = 0; i < points.length && i < maxDrivers; i++) {
+                    document.getElementById("driver" + (i + 1)).style.transform = "scale(1)";
+                }
 
                 drawLandmarks(detections);
             }
@@ -118,9 +109,6 @@
                     const y = points[j]._y;
                     fill(255, 0, 0);
                     ellipse(x, y, 5);
-
-                    stroke(255);
-                    line(x, y, width / 2, height / 2);
                 }
             }
         }
