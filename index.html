@@ -26,28 +26,25 @@
         }
 
         #info {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 5px;
-    text-align: center;
-    width: 80%;
-    max-width: 600px;
-    display: flex;
-    justify-content: center;
-    align-items: center; /* This ensures the content is vertically centered */
-}
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
 
-#info h2 {
-    margin: 0; /* Remove default margin */
-    font-size: 1.5em;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
+        #info h2 {
+            margin: 0; 
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #00FF00; /* Matrix green */
+            text-shadow: 0px 0px 10px #00FF00; /* Neon glow effect */
+        }
 
         .modal {
             display: none;
@@ -155,10 +152,13 @@
                 let y = height / 2 + 50 * sin(0.1 * frameCount + i);
                 let d = 50 + 10 * sin(0.1 * frameCount + i);
 
-                fill(255);
+                fill(0);  // Black fill for bubbles
+                stroke(0, 255, 0);  // Matrix green stroke
+                strokeWeight(2);  // Thicker stroke for the neon effect
                 ellipse(x, y, d);
                 textAlign(CENTER, CENTER);
                 textSize(16);
+                fill(0, 255, 0);  // Matrix green text
                 text(bubbles[i].title, x, y);
 
                 if (dist(mouseX, mouseY, x, y) < d / 2) {
