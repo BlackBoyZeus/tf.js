@@ -20,25 +20,43 @@
     <style>
         body {
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #20232a;
+            color: white;
         }
 
         #info {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            z-index: 2;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
             border-radius: 5px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
         }
 
-        canvas {
-            position: absolute;
+        .modal {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
-            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 3;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 400px;
+            color: black;
         }
     </style>
 </head>
@@ -46,6 +64,13 @@
 <body>
     <div id="info">
         <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
+    </div>
+
+    <!-- Modal Template -->
+    <div id="bubbleModal" class="modal">
+        <div class="modal-content">
+            <p id="modalText"></p>
+        </div>
     </div>
 
     <script>
@@ -103,32 +128,30 @@
             }
         }
 
+        function showModal(info) {
+            const modal = document.getElementById("bubbleModal");
+            const modalText = document.getElementById("modalText");
+            modalText.innerHTML = info;
+            modal.style.display = "block";
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 5000);
+        }
+
         function drawIncentiveDriversBubbles() {
             for (let i = 0; i < bubbles.length; i++) {
                 let x = (i + 1) * width / (bubbles.length + 1);
                 let y = height / 2 + 50 * sin(0.1 * frameCount + i);
                 let d = 50 + 10 * sin(0.1 * frameCount + i);
 
-                if (!bubbles[i].popped) {
-                    fill(255);
-                    ellipse(x, y, d);
-                    textAlign(CENTER, CENTER);
-                    textSize(16);
-                    text(bubbles[i].title, x, y);
-                    
-                    if (dist(mouseX, mouseY, x, y) < d / 2) {
-                        bubbles[i].popped = true;
-                        clearTimeout(bubbles[i].popTimeout);
-                        bubbles[i].popTimeout = setTimeout(() => {
-                            bubbles[i].popped = false;
-                        }, 5000);
-                    }
-                } else {
-                    fill(255, 255, 255, 150);
-                    rect(x - 150, y - 50, 300, 100);
-                    fill(0);
-                    textSize(14);
-                    text(bubbles[i].info, x, y, 280, 80);
+                fill(255);
+                ellipse(x, y, d);
+                textAlign(CENTER, CENTER);
+                textSize(16);
+                text(bubbles[i].title, x, y);
+
+                if (dist(mouseX, mouseY, x, y) < d / 2) {
+                    showModal(bubbles[i].info);
                 }
             }
         }
@@ -145,3 +168,4 @@
 </body>
 
 </html>
+
