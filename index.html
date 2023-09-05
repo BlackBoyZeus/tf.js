@@ -1,277 +1,185 @@
-<!DOCTYPE html>
+DOCTYPE html>
+<html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive Boxing Event Incentive Drivers with BodyPix">
-    <meta name="keywords" content="Boxing, Event, Incentive, Drivers, BodyPix, Interactive">
-    <meta name="author" content="Your Name Here">
-    <title>Boxing Event Incentive Drivers with BodyPix</title>
-    <link rel="icon" type="image/png" href="path_to_favicon.png"/>
-
-    <!-- p5 Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
-    <!-- ml5 Library -->
-    <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
-
-    <!-- Styles -->
+    <title>Boxing Event Incentive Drivers</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ml5/0.6.0/ml5.min.js"></script>
     <style>
         body {
-            overflow: hidden;
             font-family: 'Arial', sans-serif;
-            background-color: #20232a;
+            transition: background-color 1s;
+        }
+
+        .content {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
             color: white;
         }
 
-        #info {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 5px;
-            text-align: center;
-            width: 80%;
-            max-width: 600px;
-        }
-
-        #info h2 {
-            margin: 0; 
-            font-size: 1.5em;
+        .score {
+            font-size: 24px;
             font-weight: bold;
-            color: #00FF00; /* Matrix green */
-            text-shadow: 0px 0px 10px #00FF00; /* Neon glow effect */
         }
 
-        .modal {
-            display: none;
+        canvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 3;
+            z-index: 1;
         }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            max-width: 400px;
-            color: black;
+        ul {
+            list-style-type: none;
         }
 
-        /* Additional styles for new content */
-        #introBanner {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 5px;
-            text-align: center;
-            width: 90%;
-            max-width: 650px;
+        li {
+            font-size: 1.5em;
+            opacity: 0;
+            transition: opacity 1s;
         }
 
-        .accordion {
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            text-align: left;
-            border: none;
-            outline: none;
-            transition: background-color 0.3s;
-        }
+        #driver6 { opacity: 1; } /* Always show the last driver */
 
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-        }
-
-        .accordion:active, .accordion:hover {
-            background-color: rgba(0, 255, 0, 0.2); /* Matrix green tint on hover */
-        }
-
-        #conclusion, #contact {
-            margin-top: 20px;
-            padding: 15px;
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 5px;
-        }
     </style>
 </head>
-
 <body>
-    <div id="info">
-        <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
-    </div>
-
-    <div id="introBanner">
-        <h2>The Mayweather vs. Logan Paul bout was more than an event – it was a paradigm shift.</h2>
-        <p>As boxing's timeless tradition met digital stardom, the doors to a new realm of global engagement and advertising potential swung wide open. Enter Crowdface.</p>
-    </div>
-
-    <!-- Expandable Sections for the content -->
-    <div id="contentSections" style="position: absolute; bottom: 20px; width: 90%; left: 5%;">
-        <button class="accordion">Crowdface's Global Vision</button>
-        <div class="accordion-content">
-            <p>By leveraging state-of-the-art facial recognition, Crowdface turns every live audience member into a dynamic advertising canvas, overlaying sponsor logos seamlessly during broadcasts. This isn’t mere advertising; it’s a revolutionary engagement strategy.</p>
-        </div>
-
-        <button class="accordion">Mayweather vs. Logan Paul: Setting the Global Stage</button>
-        <div class="accordion-content">
-            <p>This clash of titans, seen worldwide, beckoned millions from all demographics – hardcore boxing aficionados to digital natives, fans of YouTube influencers. The audience wasn't just vast; it was varied, and it was global.</p>
-        </div>
-
-        <button class="accordion">Crowdface's Globalization Strategy in Play</button>
-        <div class="accordion-content">
+    <div style="display: flex; align-items: flex-start;">
+        <div style="flex: 1; padding: 20px;">
+            <h1>Incentive Drivers for Boxing Events</h1>
             <ul>
-                <li>Limitless Advertising Real Estate: Beyond traditional placements, every face in the audience became a potential canvas. The global reach expanded exponentially.</li>
-                <li>Flexible Sponsorship Tiers: Brands could opt for packages tailored to their reach and budget, ensuring maximum return on investment.</li>
-                <li>Dynamic Revenue Model: Crowdface's innovative stake in fight night revenues ensured alignment with the event's success and promised escalating returns as its adoption grew.</li>
+                <li>Pay-Per-View Revenue</li>
+                <li>Sponsorship Deals</li>
+                <li>Ticket Sales</li>
+                <li>High-Profile Matchups</li>
+                <li>International Exposure</li>
+                <li>Media Coverage</li>
             </ul>
         </div>
-
-        <button class="accordion">Global Revenue Potential</button>
-        <div class="accordion-content">
-            <p>Imagine the vastness of such an event's advertising allure:</p>
-            <ul>
-                <li>Direct Ad Integration: A premium package could fetch upwards of $1 million. With multiple global brands participating, the revenue scales significantly.</li>
-                <li>Revenue Sharing: A modest stake in an event's revenue, like the Mayweather-Paul bout, translates to substantial earnings, poised to grow with each event.</li>
-            </ul>
+        <div style="flex: 2;">
+            <h1>Real-time Face Detection with Landmarks</h1>
+            <video id="webcam" autoplay playsinline></video>
+            <canvas id="canvas" width="640" height="480"></canvas>
         </div>
-
-        <button class="accordion">The Global Future with Crowdface</button>
-        <div class="accordion-content">
-            <p>Boxing, a sport steeped in tradition, is now on the cusp of a global renaissance. Crowdface is the bridge:</p>
-            <ul>
-                <li>Beyond Boundaries: Every match, every event becomes a global spectacle, connecting brands with diverse economies and cultures.</li>
-                <li>Digital Native Engagement: For an audience now fluent in digital experiences, Crowdface is both intuitive and groundbreaking.</li>
-                <li>Ensuring Global Brand Resonance: In a world overflowing with advertisements, Crowdface ensures brands resonate, remembered and revered.</li>
-            </ul>
-        </div>
-
-        <div id="conclusion">
-            <p>Mayweather vs. Logan Paul was a harbinger of the new age of boxing - one that's not confined by geographies but is truly global. With Crowdface, the world isn't just watching; it's engaging. It’s not just a match; it’s a movement. As we spearhead this global revolution, join us in crafting the future.</p>
-        </div>
-
-        <div id="contact">
-            <p>For deeper insights and pioneering partnerships, reach out to our visionary team at <a href="mailto:fly@ultrabrain.world">fly@ultrabrain.world</a>.</p>
-        </div>
-    </div>
-
-    <!-- Modal Template -->
-    <div id="bubbleModal" class="modal">
-        <div class="modal-content">
-            <p id="modalText"></p>
-        </div>
+    <div class="content">
+        <h1>Face Morph Game</h1>
+        <p>Get close to unlock Boxing Event Incentive Drivers!</p>
+        <ul>
+            <li id="driver1">Pay-Per-View Revenue</li>
+            <li id="driver2">Sponsorship Deals</li>
+            <li id="driver3">Ticket Sales</li>
+            <li id="driver4">High-Profile Matchups</li>
+            <li id="driver5">International Exposure</li>
+            <li id="driver6">Media Coverage</li>
+        </ul>
     </div>
 
     <script>
-        let bodypix;
+        async function setupCamera() {
+            const video = document.getElementById('webcam');
         let video;
-        let segmentation;
+        let faceApi;
+        let detections = [];
 
-        const options = {
-            outputStride: 16,
-            segmentationThreshold: 0.5
-        };
-
-        const drivers = [
-            { title: "Pay-Per-View Revenue", info: "Contributes up to 70% of total revenue. The anticipation and hype surrounding marquee matchups lead fans to purchase events, especially with the convenience of digital streaming."},
-            { title: "Sponsorship Deals", info: "Account for around 15% of earnings. Brands align with high-profile events to enhance their visibility and appeal."},
-            { title: "Ticket Sales", info: "Approximately 10% of the revenue comes from ticket sales. The live experience of a boxing event, especially in large venues, can draw thousands."},
-            { title: "High-Profile Matchups", info: "Can boost overall revenue by 20%. The stature of the event is elevated when two renowned boxers face off, drawing more attention and generating buzz."},
-            { title: "International Exposure", info: "Around 3% of revenue can come from global broadcasting rights, showcasing boxing's universal appeal."},
-            { title: "Media Coverage", info: "Indirectly boosts revenue by about 2%. Pre-event promotions, press conferences, and interviews serve as pivotal promotional tools." }
-        ];
-
-        const bubbles = drivers.map(driver => ({ ...driver, popped: false, popTimeout: null }));
-
+            const stream = await navigator.mediaDevices.getUserMedia({ 'video': true });
+            video.srcObject = stream;
         function setup() {
             createCanvas(windowWidth, windowHeight);
-            setupVideo();
-            bodypix = ml5.bodyPix(video, options, modelReady);
-        }
-
-        function setupVideo() {
             video = createCapture(VIDEO);
             video.size(width, height);
             video.hide();
+
+            return new Promise((resolve) => {
+                video.onloadedmetadata = () => {
+                    resolve(video);
+                };
+            });
+            const options = {
+                withLandmarks: true,
+            };
+            faceApi = ml5.faceApi(video, options, modelReady);
         }
 
+        async function detectFaces() {
+            const video = await setupCamera();
+            video.play();
+
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
         function modelReady() {
-            bodypix.segment(gotResults);
+            faceApi.detect(gotResults);
         }
 
-        function gotResults(error, result) {
-            if (error) {
-                console.error(error);
+            const faceDetection = new faceDetection.FaceDetection({
+                modelUrl: faceDetection.SupportedModels.MediaPipeFaceDetector
+            });
+        function gotResults(err, result) {
+            if (err) {
+                console.error(err);
                 return;
             }
-            segmentation = result;
-            bodypix.segment(gotResults);
+            detections = result;
+            faceApi.detect(gotResults);
         }
 
-        function drawGradientEffect() {
-            for (let i = 0; i <= width; i += 10) {
-                let inter = map(i, 0, width, 0, 1);
-                let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
-                stroke(c);
-                line(i, 0, i, height);
+            async function renderPrediction() {
+                const faces = await faceDetection.estimateFaces(video);
+        function draw() {
+            background(50);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            if (detections && detections.length > 0) {
+                const faceSize = detections[0].alignedRect._box._width * detections[0].alignedRect._box._height;
+                const energyLevel = map(faceSize, 10000, 640 * 480 * 0.6, 0, 255);
+                document.body.style.backgroundColor = `rgb(${energyLevel}, 50, 255)`;
+
+                faces.forEach(face => {
+                    const boundingBox = face.boundingBox;
+                    ctx.strokeStyle = '#00FF00';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+                });
+                // Unlock drivers based on distance
+                if (energyLevel > 40) document.getElementById("driver1").style.opacity = 1;
+                if (energyLevel > 80) document.getElementById("driver2").style.opacity = 1;
+                if (energyLevel > 120) document.getElementById("driver3").style.opacity = 1;
+                if (energyLevel > 160) document.getElementById("driver4").style.opacity = 1;
+                if (energyLevel > 200) document.getElementById("driver5").style.opacity = 1;
+
+                requestAnimationFrame(renderPrediction);
+                drawLandmarks(detections);
             }
         }
 
-        function showModal(info) {
-            const modal = document.getElementById("bubbleModal");
-            const modalText = document.getElementById("modalText");
-            modalText.innerHTML = info;
-            modal.style.display = "block";
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 5000);
-        }
+            renderPrediction();
+        function drawLandmarks(detections) {
+            for (let i = 0; i < detections.length; i++) {
+                const points = detections[i].landmarks.positions;
+                for (let j = 0; j < points.length; j++) {
+                    const x = points[j]._x;
+                    const y = points[j]._y;
+                    fill(255, 0, 0);
+                    ellipse(x, y, 5);
 
-        function drawIncentiveDriversBubbles() {
-            for (let i = 0; i < bubbles.length; i++) {
-                let x = (i + 1) * width / (bubbles.length + 1);
-                let y = height / 2 + 50 * sin(0.1 * frameCount + i);
-                let d = 50 + 10 * sin(0.1 * frameCount + i);
-
-                fill(0);  // Black fill for bubbles
-                stroke(0, 255, 0);  // Matrix green stroke
-                strokeWeight(2);  // Thicker stroke for the neon effect
-                ellipse(x, y, d);
-                textAlign(CENTER, CENTER);
-                textSize(16);
-                fill(0, 255, 0);  // Matrix green text
-                text(bubbles[i].title, x, y);
-
-                if (dist(mouseX, mouseY, x, y) < d / 2) {
-                    showModal(bubbles[i].info);
+                    stroke(255);
+                    line(x, y, width / 2, height / 2);
                 }
             }
         }
 
-        function draw() {
-            background(0);
-            if (segmentation) {
-                image(segmentation.personMask, 0, 0, width, height);
-                drawGradientEffect();
-                drawIncentiveDriversBubbles();
-            }
-        }
+        detectFaces();
     </script>
 </body>
-
 </html>
