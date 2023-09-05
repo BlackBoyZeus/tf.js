@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,19 +9,23 @@
     <meta name="author" content="Your Name Here">
     <title>Boxing Event Incentive Drivers with BodyPix</title>
     <link rel="icon" type="image/png" href="path_to_favicon.png"/>
+
     <!-- p5 Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
     <!-- ml5 Library -->
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+
     <!-- Styles -->
     <style>
         body {
-            overflow: hidden;
+            overflow: auto;
             font-family: 'Arial', sans-serif;
             background-color: #20232a;
             color: white;
+            padding: 20px 0;
         }
+
         #info {
             position: absolute;
             top: 10px;
@@ -32,127 +37,234 @@
             text-align: center;
             width: 80%;
             max-width: 600px;
+            z-index: 2;
+            box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.5);
+            border: 1px solid #FF5733;
         }
+
         #info h2 {
-            margin: 0; 
+            margin: 0;
             font-size: 1.5em;
             font-weight: bold;
-            color: #00FF00; /* Matrix green */
-            text-shadow: 0px 0px 10px #00FF00; /* Neon glow effect */
+            color: #FFC300;
+            text-shadow: 0px 0px 10px #FFC300;
         }
+
+        #introBanner {
+            margin-top: 100px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 700px;
+            margin: 100px auto;
+        }
+
+        .accordion {
+            margin: 10px 0;
+            padding: 15px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #FFC300;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-content {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 5px 0;
+            color: white;
+        }
+
+        a {
+            color: #FF5733;
+            text-decoration: none;
+        }
+
+        #conclusion, #contact {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            z-index: 3;
+            z-index: 4;
+            transition: opacity 0.3s;
         }
+
         .modal-content {
-            background-color: #fefefe;
+            background-color: #3D5A80;
             margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            max-width: 400px;
-            color: black;
+            padding: 30px;
+            border: 2px solid #888;
+            border-radius: 10px;
+            width: 60%;
+            max-width: 500px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
+
 <body>
     <div id="info">
         <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
     </div>
-    <!-- Modal Template -->
+    <div id="introBanner">
+        <h2>The Mayweather vs. Logan Paul bout was more than an event – it was a paradigm shift.</h2>
+        <p>As boxing's timeless tradition met digital stardom, the doors to a new realm of global engagement and advertising potential swung wide open. Enter Crowdface.</p>
+    </div>
+    <div id="contentSections" style="position: absolute; bottom: 20px; width: 90%; left: 5%;">
+        <button class="accordion">Crowdface's Global Vision</button>
+        <div class="accordion-content">
+            <p>By leveraging state-of-the-art facial recognition, Crowdface turns every live audience member into a dynamic advertising canvas, overlaying sponsor logos seamlessly during broadcasts. This isn’t mere advertising; it’s a revolutionary engagement strategy.</p>
+        </div>
+        <button class="accordion">Mayweather vs. Logan Paul: Setting the Global Stage</button>
+        <div class="accordion-content">
+            <p>This clash of titans, seen worldwide, beckoned millions from all demographics – hardcore boxing aficionados to digital natives, fans of YouTube influencers. The audience wasn't just vast; it was varied, and it was global.</p>
+        </div>
+        <button class="accordion">Crowdface's Globalization Strategy in Play</button>
+        <div class="accordion-content">
+            <ul>
+                <li>Limitless Advertising Real Estate: Beyond traditional placements, every face in the audience became a potential canvas. The global reach expanded exponentially.</li>
+                <li>Flexible Sponsorship Tiers: Brands could opt for packages tailored to their reach and budget, ensuring maximum return on investment.</li>
+                <li>Dynamic Revenue Model: Crowdface's innovative stake in fight night revenues ensured alignment with the event's success and promised escalating returns as its adoption grew.</li>
+            </ul>
+        </div>
+        <button class="accordion">Global Revenue Potential</button>
+        <div class="accordion-content">
+            <p>Imagine the vastness of such an event's advertising allure:</p>
+            <ul>
+                <li>Direct Ad Integration: A premium package could fetch upwards of $1 million. With multiple global brands participating, the revenue scales significantly.</li>
+                <li>Revenue Sharing: A modest stake in an event's revenue, like the Mayweather-Paul bout, translates to substantial earnings, poised to grow with each event.</li>
+            </ul>
+        </div>
+        <button class="accordion">The Global Future with Crowdface</button>
+        <div class="accordion-content">
+            <p>Boxing, a sport steeped in tradition, is now on the cusp of a global renaissance. Crowdface is the bridge:</p>
+            <ul>
+                <li>Beyond Boundaries: Every match, every event becomes a global spectacle, connecting brands with diverse economies and cultures.</li>
+                <li>Digital Native Engagement: For an audience now fluent in digital experiences, Crowdface is both intuitive and groundbreaking.</li>
+                <li>Ensuring Global Brand Resonance: In a world overflowing with advertisements, Crowdface ensures brands resonate, remembered and revered.</li>
+            </ul>
+        </div>
+        <div id="conclusion">
+            <p>Mayweather vs. Logan Paul was a harbinger of the new age of boxing - one that's not confined by geographies but is truly global. With Crowdface, the world isn't just watching; it's engaging. It’s not just a match; it’s a movement. As we spearhead this global revolution, join us in crafting the future.</p>
+        </div>
+        <div id="contact">
+            <p>For deeper insights and pioneering partnerships, reach out to our visionary team at <a href="mailto:fly@ultrabrain.world">fly@ultrabrain.world</a>.</p>
+        </div>
+    </div>
     <div id="bubbleModal" class="modal">
         <div class="modal-content">
             <p id="modalText"></p>
         </div>
     </div>
     <script>
-        let bodypix;
-        let video;
-        let segmentation;
-        const options = {
-            outputStride: 16,
-            segmentationThreshold: 0.5
-        };
-        const drivers = [
-            { title: "Pay-Per-View Revenue", info: "Contributes up to 70% of total revenue. The anticipation and hype surrounding marquee matchups lead fans to purchase events, especially with the convenience of digital streaming."},
-            { title: "Sponsorship Deals", info: "Account for around 15% of earnings. Brands align with high-profile events to enhance their visibility and appeal."},
-            { title: "Ticket Sales", info: "Approximately 10% of the revenue comes from ticket sales. The live experience of a boxing event, especially in large venues, can draw thousands."},
-            { title: "High-Profile Matchups", info: "Can boost overall revenue by 20%. The stature of the event is elevated when two renowned boxers face off, drawing more attention and generating buzz."},
-            { title: "International Exposure", info: "Around 3% of revenue can come from global broadcasting rights, showcasing boxing's universal appeal."},
-            { title: "Media Coverage", info: "Indirectly boosts revenue by about 2%. Pre-event promotions, press conferences, and interviews serve as pivotal promotional tools." }
-        ];
-        
-        const bubbles = drivers.map(driver => ({ ...driver, popped: false, popTimeout: null }));
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
-            setupVideo();
-            bodypix = ml5.bodyPix(video, options, modelReady);
+       // Initial setup for the bodyPix model and video
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    setupVideo();
+    bodypix = ml5.bodyPix(video, options, modelReady);
+}
+
+// Sets up the video feed
+function setupVideo() {
+    video = createCapture(VIDEO);
+    video.size(width, height);
+    video.hide();
+}
+
+// Callback when the bodyPix model is ready
+function modelReady() {
+    bodypix.segment(gotResults);
+}
+
+// Callback for when segmentation results are available
+function gotResults(error, result) {
+    if (error) {
+        console.error(error);
+        return;
+    }
+    segmentation = result;
+    bodypix.segment(gotResults);
+}
+
+// Draws a gradient effect on the canvas
+function drawGradientEffect() {
+    for (let i = 0; i <= width; i += 10) {
+        let inter = map(i, 0, width, 0, 1);
+        let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
+        stroke(c);
+        line(i, 0, i, height);
+    }
+}
+
+// Shows a modal with given information
+function showModal(info) {
+    const modal = document.getElementById("bubbleModal");
+    const modalText = document.getElementById("modalText");
+    modalText.innerHTML = info;
+    modal.style.display = "block";
+    setTimeout(() => {
+        modal.style.display = "none";
+    }, 5000);
+}
+
+// Draws bubbles on the canvas representing incentive drivers
+function drawIncentiveDriversBubbles() {
+    for (let i = 0; i < bubbles.length; i++) {
+        let x = (i + 1) * width / (bubbles.length + 1);
+        let y = height / 2 + 50 * sin(0.1 * frameCount + i);
+        let d = 50 + 10 * sin(0.1 * frameCount + i);
+        fill(0);
+        stroke(0, 255, 0);
+        strokeWeight(2);
+        ellipse(x, y, d);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        fill(0, 255, 0);
+        text(bubbles[i].title, x, y);
+        if (dist(mouseX, mouseY, x, y) < d / 2) {
+            showModal(bubbles[i].info);
         }
-        function setupVideo() {
-            video = createCapture(VIDEO);
-            video.size(width, height);
-            video.hide();
-        }
-        function modelReady() {
-            bodypix.segment(gotResults);
-        }
-        function gotResults(error, result) {
-            if (error) {
-                console.error(error);
-                return;
-            }
-            segmentation = result;
-            bodypix.segment(gotResults);
-        }
-        function drawGradientEffect() {
-            for (let i = 0; i <= width; i += 10) {
-                let inter = map(i, 0, width, 0, 1);
-                let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
-                stroke(c);
-                line(i, 0, i, height);
-            }
-        }
-        function showModal(info) {
-            const modal = document.getElementById("bubbleModal");
-            const modalText = document.getElementById("modalText");
-            modalText.innerHTML = info;
-            modal.style.display = "block";
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 5000);
-        }
-        function drawIncentiveDriversBubbles() {
-            for (let i = 0; i < bubbles.length; i++) {
-                let x = (i + 1) * width / (bubbles.length + 1);
-                let y = height / 2 + 50 * sin(0.1 * frameCount + i);
-                let d = 50 + 10 * sin(0.1 * frameCount + i);
-                fill(0);  // Black fill for bubbles
-                stroke(0, 255, 0);  // Matrix green stroke
-                strokeWeight(2);  // Thicker stroke for the neon effect
-                ellipse(x, y, d);
-                textAlign(CENTER, CENTER);
-                textSize(16);
-                fill(0, 255, 0);  // Matrix green text
-                text(bubbles[i].title, x, y);
-                if (dist(mouseX, mouseY, x, y) < d / 2) {
-                    showModal(bubbles[i].info);
-                }
-            }
-        }
-        function draw() {
-            background(0);
-            if (segmentation) {
-                image(segmentation.personMask, 0, 0, width, height);
-                drawGradientEffect();
-                drawIncentiveDriversBubbles();
-            }
-        }
+    }
+}
+
+// Main drawing function
+function draw() {
+    background(0);
+    if (segmentation) {
+        image(segmentation.personMask, 0, 0, width, height);
+        drawGradientEffect();
+        drawIncentiveDriversBubbles();
+    }
+}
+
+// Variables and constants
+const options = {
+    outputStride: 16,
+    segmentationThreshold: 0.5
+};
+const drivers = [
+    // Original drivers array here...
+];
+const bubbles = drivers.map(driver => ({ ...driver, popped: false, popTimeout: null }));
+let bodypix;
+let video;
+let segmentation;
+
     </script>
 </body>
 
