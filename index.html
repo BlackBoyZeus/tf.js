@@ -17,13 +17,39 @@
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
 
     <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            overflow: auto;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Open Sans', sans-serif;
             background-color: #20232a;
-            color: white;
+            color: #FFFFFF;
             padding: 20px 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h2 {
+            color: #FFC300;
+        }
+
+        a {
+            color: #FF5733;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #FF8D63;
+        }
+
+        #info, #introBanner, #conclusion, #contact, .accordion-content {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            max-width: 700px;
+            text-align: center;
+            transition: background-color 0.3s;
         }
 
         #info {
@@ -31,146 +57,167 @@
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 5px;
-            text-align: center;
-            width: 80%;
-            max-width: 600px;
             z-index: 2;
             box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.5);
             border: 1px solid #FF5733;
         }
 
-        #info h2 {
-            margin: 0;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #FFC300;
-            text-shadow: 0px 0px 10px #FFC300;
-        }
-
-        #introBanner {
-            margin-top: 100px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 10px;
-            text-align: center;
-            width: 90%;
-            max-width: 700px;
-            margin: 100px auto;
-        }
-
         .accordion {
-            margin: 10px 0;
-            padding: 15px;
+            cursor: pointer;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            text-align: left;
             color: #FFC300;
             border: none;
             border-radius: 10px;
             transition: background-color 0.3s;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .accordion-content {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 5px 0;
-            color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s;
+            padding: 0 15px;
         }
 
-        a {
-            color: #FF5733;
-            text-decoration: none;
-        }
-
-        #conclusion, #contact {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 10px;
-        }
-
-        a:hover {
-            text-decoration: underline;
+        .accordion-content p {
+            margin: 15px 0;
         }
 
         .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 4;
+            align-items: center;
+            justify-content: center;
             transition: opacity 0.3s;
         }
 
         .modal-content {
             background-color: #3D5A80;
-            margin: 15% auto;
             padding: 30px;
             border: 2px solid #888;
             border-radius: 10px;
-            width: 60%;
             max-width: 500px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            #info {
+                font-size: 0.8em;
+                padding: 5px 10px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- Informational banner -->
     <div id="info">
         <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
     </div>
+
+    <!-- Introduction banner -->
     <div id="introBanner">
         <h2>The Mayweather vs. Logan Paul bout was more than an event – it was a paradigm shift.</h2>
         <p>As boxing's timeless tradition met digital stardom, the doors to a new realm of global engagement and advertising potential swung wide open. Enter Crowdface.</p>
     </div>
-    <div id="contentSections" style="position: absolute; bottom: 20px; width: 90%; left: 5%;">
-        <button class="accordion">Crowdface's Global Vision</button>
-        <div class="accordion-content">
-            <p>By leveraging state-of-the-art facial recognition, Crowdface turns every live audience member into a dynamic advertising canvas, overlaying sponsor logos seamlessly during broadcasts. This isn’t mere advertising; it’s a revolutionary engagement strategy.</p>
+
+    <!-- Content sections with accordion effect -->
+    <div id="contentSections" style="max-width: 800px; margin: 0 auto;">
+        <!-- Accordion section -->
+        <div>
+            <button class="accordion">Crowdface's Global Vision</button>
+            <div class="accordion-content">
+                <p>By leveraging state-of-the-art facial recognition, Crowdface turns every live audience member into a dynamic advertising canvas, overlaying sponsor logos seamlessly during broadcasts. This isn’t mere advertising; it’s a revolutionary engagement strategy.</p>
+            </div>
         </div>
-        <button class="accordion">Mayweather vs. Logan Paul: Setting the Global Stage</button>
-        <div class="accordion-content">
-            <p>This clash of titans, seen worldwide, beckoned millions from all demographics – hardcore boxing aficionados to digital natives, fans of YouTube influencers. The audience wasn't just vast; it was varied, and it was global.</p>
+
+        <!-- Accordion section -->
+        <div>
+            <button class="accordion">Mayweather vs. Logan Paul: Setting the Global Stage</button>
+            <div class="accordion-content">
+                <p>This clash of titans, seen worldwide, beckoned millions from all demographics – hardcore boxing aficionados to digital natives, fans of YouTube influencers. The audience wasn't just vast; it was varied, and it was global.</p>
+            </div>
         </div>
-        <button class="accordion">Crowdface's Globalization Strategy in Play</button>
-        <div class="accordion-content">
-            <ul>
-                <li>Limitless Advertising Real Estate: Beyond traditional placements, every face in the audience became a potential canvas. The global reach expanded exponentially.</li>
-                <li>Flexible Sponsorship Tiers: Brands could opt for packages tailored to their reach and budget, ensuring maximum return on investment.</li>
-                <li>Dynamic Revenue Model: Crowdface's innovative stake in fight night revenues ensured alignment with the event's success and promised escalating returns as its adoption grew.</li>
-            </ul>
+
+        <!-- More accordion sections... -->
+        <!-- Accordion section -->
+        <div>
+            <button class="accordion">Crowdface's Globalization Strategy in Play</button>
+            <div class="accordion-content">
+                <ul>
+                    <li>Limitless Advertising Real Estate: Beyond traditional placements, every face in the audience became a potential canvas. The global reach expanded exponentially.</li>
+                    <li>Flexible Sponsorship Tiers: Brands could opt for packages tailored to their reach and budget, ensuring maximum return on investment.</li>
+                    <li>Dynamic Revenue Model: Crowdface's innovative stake in fight night revenues ensured alignment with the event's success and promised escalating returns as its adoption grew.</li>
+                </ul>
+            </div>
         </div>
-        <button class="accordion">Global Revenue Potential</button>
-        <div class="accordion-content">
-            <p>Imagine the vastness of such an event's advertising allure:</p>
-            <ul>
-                <li>Direct Ad Integration: A premium package could fetch upwards of $1 million. With multiple global brands participating, the revenue scales significantly.</li>
-                <li>Revenue Sharing: A modest stake in an event's revenue, like the Mayweather-Paul bout, translates to substantial earnings, poised to grow with each event.</li>
-            </ul>
+
+        <!-- Accordion section -->
+        <div>
+            <button class="accordion">Global Revenue Potential</button>
+            <div class="accordion-content">
+                <p>Imagine the vastness of such an event's advertising allure:</p>
+                <ul>
+                    <li>Direct Ad Integration: A premium package could fetch upwards of $1 million. With multiple global brands participating, the revenue scales significantly.</li>
+                    <li>Revenue Sharing: A modest stake in an event's revenue, like the Mayweather-Paul bout, translates to substantial earnings, poised to grow with each event.</li>
+                </ul>
+            </div>
         </div>
-        <button class="accordion">The Global Future with Crowdface</button>
-        <div class="accordion-content">
-            <p>Boxing, a sport steeped in tradition, is now on the cusp of a global renaissance. Crowdface is the bridge:</p>
-            <ul>
-                <li>Beyond Boundaries: Every match, every event becomes a global spectacle, connecting brands with diverse economies and cultures.</li>
-                <li>Digital Native Engagement: For an audience now fluent in digital experiences, Crowdface is both intuitive and groundbreaking.</li>
-                <li>Ensuring Global Brand Resonance: In a world overflowing with advertisements, Crowdface ensures brands resonate, remembered and revered.</li>
-            </ul>
+
+        <!-- Accordion section -->
+        <div>
+            <button class="accordion">The Global Future with Crowdface</button>
+            <div class="accordion-content">
+                <p>Boxing, a sport steeped in tradition, is now on the cusp of a global renaissance. Crowdface is the bridge:</p>
+                <ul>
+                    <li>Beyond Boundaries: Every match, every event becomes a global spectacle, connecting brands with diverse economies and cultures.</li>
+                    <li>Digital Native Engagement: For an audience now fluent in digital experiences, Crowdface is both intuitive and groundbreaking.</li>
+                    <li>Ensuring Global Brand Resonance: In a world overflowing with advertisements, Crowdface ensures brands resonate, remembered and revered.</li>
+                </ul>
+            </div>
         </div>
+
+        <!-- Conclusion section -->
         <div id="conclusion">
             <p>Mayweather vs. Logan Paul was a harbinger of the new age of boxing - one that's not confined by geographies but is truly global. With Crowdface, the world isn't just watching; it's engaging. It’s not just a match; it’s a movement. As we spearhead this global revolution, join us in crafting the future.</p>
         </div>
+
+        <!-- Contact section -->
         <div id="contact">
             <p>For deeper insights and pioneering partnerships, reach out to our visionary team at <a href="mailto:fly@ultrabrain.world">fly@ultrabrain.world</a>.</p>
         </div>
     </div>
+
+    <!-- Bubble modal -->
     <div id="bubbleModal" class="modal">
         <div class="modal-content">
             <p id="modalText"></p>
         </div>
     </div>
+
+    <!-- Script for the accordion functionality -->
+    <script>
+        document.querySelectorAll('.accordion').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                button.classList.toggle('active');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+    </script>
     <script>
        // Initial setup for the bodyPix model and video
 function setup() {
