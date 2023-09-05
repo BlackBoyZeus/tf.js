@@ -22,53 +22,46 @@
 <style>
     body {
         overflow: hidden;
-        font-family: 'Courier New', Courier, monospace;
-        background: radial-gradient(circle at center, #3A1C71, #D76D77, #FFAF7B); /* Cosmic radial gradient */
-        color: #B0C7D4; /* Metallic blue */
-        perspective: 1000px; /* For 3D transformations */
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Deep blue gradient reminiscent of a futuristic HUD */
+        color: #B0C7D4; /* Light bluish-gray for text */
     }
 
     h2 {
-        font-size: 2em;
+        font-size: 2.2em;
         font-weight: bold;
-        color: #FF5733; /* Rusty orange with a neon feel */
-        text-shadow: 0px 0px 10px #FFC300; /* Neon glow effect */
-        transform: rotateX(45deg); /* 3D rotation */
-        transition: transform 0.3s;
-    }
-
-    h2:hover {
-        transform: rotateX(0deg);
+        color: #FF5733; /* Bright contrast color */
+        text-shadow: 2px 2px 10px #FF5733; /* Subtle glow effect */
     }
 
     #info, #introBanner, .accordion, #conclusion, #contact, .modal-content {
-        border: 2px solid #B0C7D4;
-        box-shadow: 0px 0px 15px rgba(255, 87, 51, 0.7); /* Neon glow effect */
-        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-        transform: skewY(-5deg); /* Skewing to break the orthodoxy */
+        border: 1px solid #B0C7D4;
+        box-shadow: 0px 0px 20px rgba(255, 87, 51, 0.5); /* A gentle neon glow */
+        background-color: rgba(0, 0, 0, 0.6); /* Slightly transparent black */
         transition: transform 0.3s;
     }
 
     #info:hover, #introBanner:hover, .accordion:hover, #conclusion:hover, #contact:hover {
-        transform: skewY(5deg) scale(1.05); /* Dynamic hover effect */
+        transform: scale(1.05); /* Gentle zoom on hover */
     }
 
     .accordion {
-        transform-origin: left;
+        cursor: pointer;
     }
 
     a {
         color: #FF5733;
         text-decoration: none;
-        border-bottom: 2px dashed #FF5733;
+        border-bottom: 1px dashed #FF5733;
         transition: border-bottom 0.3s, color 0.3s;
     }
 
     a:hover {
-        border-bottom: 2px solid #FF5733;
-        color: #FFC300; /* Change to neon on hover */
+        border-bottom: 1px solid #FF5733;
+        color: #FFC300; /* Change to a brighter hue on hover */
     }
 </style>
+
 
 
 
