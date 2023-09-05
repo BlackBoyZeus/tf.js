@@ -18,13 +18,13 @@
 
     <!-- Styles -->
     <!-- Styles -->
+<!-- Styles -->
 <style>
     body {
-        overflow: auto;  /* Let the user scroll if content overflows */
-        font-family: 'Arial', sans-serif;
-        background-color: #20232a;
-        color: white;
-        padding: 20px 0; /* Padding to give some space on top and bottom */
+        overflow: hidden;
+        font-family: 'Courier New', Courier, monospace; /* Giving it a more digital feel */
+        background: linear-gradient(to bottom, #001f3f, #3D5A80); /* Outer space gradient */
+        color: #FFC300; /* Rusty orange */
     }
 
     #info {
@@ -32,22 +32,69 @@
         top: 10px;
         left: 50%;
         transform: translateX(-50%);
-        padding: 20px;
+        padding: 10px 20px;
         background-color: rgba(0, 0, 0, 0.7);
-        border-radius: 10px; /* Increased border radius for smoother feel */
+        border-radius: 5px;
         text-align: center;
         width: 80%;
         max-width: 600px;
-        z-index: 2; /* Ensure this is above other elements */
-        box-shadow: 0px 0px 15px rgba(0, 255, 0, 0.5); /* Add a subtle shadow for depth */
+        border: 1px solid #FF5733; /* Border for a tactile feel */
     }
 
     #info h2 {
         margin: 0; 
         font-size: 1.5em;
         font-weight: bold;
-        color: #00FF00; /* Matrix green */
-        text-shadow: 0px 0px 10px #00FF00; /* Neon glow effect */
+        color: #FFC300; 
+        text-shadow: 0px 0px 10px #FFC300; /* Neon glow effect */
+    }
+
+    #introBanner {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 5px;
+        text-align: center;
+        width: 90%;
+        max-width: 650px;
+        border: 1px solid #FF5733;
+    }
+
+    .accordion {
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        text-align: left;
+        border: 1px solid #FF5733;
+        outline: none;
+        transition: background-color 0.3s;
+        background-color: #3D5A80; /* Deep space blue */
+        color: #FFC300;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+        padding-left: 10px;
+        color: #FFC300;
+    }
+
+    .accordion:active, .accordion:hover {
+        background-color: #001f3f; /* A deeper shade for hover */
+    }
+
+    #conclusion, #contact {
+        margin-top: 20px;
+        padding: 15px;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 5px;
+        border: 1px solid #FF5733;
     }
 
     .modal {
@@ -58,60 +105,30 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.7);
-        z-index: 4; /* Ensure modals are above everything else */
-        transition: opacity 0.3s; /* Smooth fade in */
+        z-index: 3;
     }
 
     .modal-content {
-        background-color: #fefefe;
+        background-color: #3D5A80;
         margin: 15% auto;
-        padding: 30px; /* Increased padding for spacious feel */
-        border: 2px solid #888;
-        border-radius: 10px; /* Smoother border */
-        width: 60%;
-        max-width: 500px;
-        color: black;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
-    }
-
-    /* Additional styles to arrange new content */
-    #introBanner {
-        margin-top: 100px; /* Push below the #info element */
         padding: 20px;
-        background-color: rgba(0, 0, 0, 0.8);
-        border-radius: 10px;
-        text-align: center;
-        width: 90%;
-        max-width: 700px;
-        margin: 100px auto; /* Center and push down */
+        border: 1px solid #888;
+        width: 50%;
+        max-width: 400px;
+        color: #FFC300;
     }
 
-    .accordion {
-        margin: 10px 0; /* Space out accordions */
-        padding: 15px;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        color: #00FF00;
-        border: none;
-        border-radius: 10px;
-        transition: background-color 0.3s;
+    /* Styling for links */
+    a {
+        color: #FF5733;
+        text-decoration: none;
     }
 
-    .accordion-content {
-        background-color: rgba(0, 0, 0, 0.9);
-        padding: 15px;
-        border-radius: 10px;
-        margin: 5px 0; /* Space between accordion and its content */
-        color: white;
-    }
-
-    #conclusion, #contact {
-        margin: 20px 0; /* Space out sections */
-        padding: 20px;
-        background-color: rgba(0, 0, 0, 0.8);
-        border-radius: 10px;
+    a:hover {
+        text-decoration: underline;
     }
 </style>
+
 
 </head>
 
