@@ -19,59 +19,56 @@
     <!-- Styles -->
     <!-- Styles -->
 <!-- Styles -->
-.body {
-    overflow: hidden;
-    font-family: 'Courier New', Courier, monospace;
-    background: linear-gradient(45deg, #001f3f, #3D5A80, #FF5733, #FFC300);
-    background-size: 600% 100%;
-    color: #B0C7D4; /* Metallic blue */
-    animation: GradientShift 10s infinite;
-}
+<style>
+    body {
+        overflow: hidden;
+        font-family: 'Courier New', Courier, monospace;
+        background: radial-gradient(circle at center, #3A1C71, #D76D77, #FFAF7B); /* Cosmic radial gradient */
+        color: #B0C7D4; /* Metallic blue */
+        perspective: 1000px; /* For 3D transformations */
+    }
 
-@keyframes GradientShift {
-    0% { background-position: 100% 0% }
-    50% { background-position: 0% 100% }
-    100% { background-position: 100% 0% }
-}
+    h2 {
+        font-size: 2em;
+        font-weight: bold;
+        color: #FF5733; /* Rusty orange with a neon feel */
+        text-shadow: 0px 0px 10px #FFC300; /* Neon glow effect */
+        transform: rotateX(45deg); /* 3D rotation */
+        transition: transform 0.3s;
+    }
 
-.h2 {
-    font-size: 2em;
-    font-weight: bold;
-    color: #FF5733; /* Rusty orange */
-    text-shadow: 0px 0px 10px #FFC300; /* Neon glow effect */
-    transform: skew(-10deg) rotate(-5deg);
-    transition: transform 0.3s;
-}
+    h2:hover {
+        transform: rotateX(0deg);
+    }
 
-.h2:hover {
-    transform: skew(10deg) rotate(5deg);
-}
+    #info, #introBanner, .accordion, #conclusion, #contact, .modal-content {
+        border: 2px solid #B0C7D4;
+        box-shadow: 0px 0px 15px rgba(255, 87, 51, 0.7); /* Neon glow effect */
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+        transform: skewY(-5deg); /* Skewing to break the orthodoxy */
+        transition: transform 0.3s;
+    }
 
-#info, #introBanner, .accordion, #conclusion, #contact, .modal-content {
-    border: 2px solid #B0C7D4;
-    box-shadow: 0px 0px 15px rgba(255, 87, 51, 0.7);
-    background-color: rgba(0, 0, 0, 0.6);
-}
+    #info:hover, #introBanner:hover, .accordion:hover, #conclusion:hover, #contact:hover {
+        transform: skewY(5deg) scale(1.05); /* Dynamic hover effect */
+    }
 
-.accordion {
-    transform: scale(1);
-    transition: transform 0.3s;
-}
+    .accordion {
+        transform-origin: left;
+    }
 
-.accordion:hover {
-    transform: scale(1.05);
-}
+    a {
+        color: #FF5733;
+        text-decoration: none;
+        border-bottom: 2px dashed #FF5733;
+        transition: border-bottom 0.3s, color 0.3s;
+    }
 
-.a {
-    color: #FF5733;
-    text-decoration: none;
-    border-bottom: 1px dashed #FF5733;
-    transition: border-bottom 0.3s;
-}
-
-.a:hover {
-    border-bottom: 1px solid #FF5733;
-}
+    a:hover {
+        border-bottom: 2px solid #FF5733;
+        color: #FFC300; /* Change to neon on hover */
+    }
+</style>
 
 
 
