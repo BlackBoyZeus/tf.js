@@ -7,16 +7,12 @@
     <meta name="description" content="Interactive Boxing Event Incentive Drivers with BodyPix">
     <meta name="keywords" content="Boxing, Event, Incentive, Drivers, BodyPix, Interactive">
     <meta name="author" content="Your Name Here">
-
     <title>Boxing Event Incentive Drivers with BodyPix</title>
-
-    <!-- Add a favicon for your website -->
     <link rel="icon" type="image/png" href="path_to_favicon.png"/>
 
     <!-- p5 Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
-
     <!-- ml5 Library -->
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
 
@@ -49,103 +45,103 @@
 
 <body>
     <div id="info">
-        <h2>Move closer to the camera and try to grab the floating bubbles to unlock Boxing Event Incentive Drivers!</h2>
+        <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
     </div>
 
     <script>
-    let bodypix;
-    let video;
-    let segmentation;
+        let bodypix;
+        let video;
+        let segmentation;
 
-    const options = {
-        outputStride: 16,
-        segmentationThreshold: 0.5
-    };
+        const options = {
+            outputStride: 16,
+            segmentationThreshold: 0.5
+        };
 
-    const drivers = [
-        { title: "Pay-Per-View Revenue", info: "Contributes up to 70% of total revenue. The anticipation and hype surrounding marquee matchups lead fans to purchase events, especially with the convenience of digital streaming."},
-        { title: "Sponsorship Deals", info: "Account for around 15% of earnings. Brands align with high-profile events to enhance their visibility and appeal."},
-        { title: "Ticket Sales", info: "Approximately 10% of the revenue comes from ticket sales. The live experience of a boxing event, especially in large venues, can draw thousands."},
-        { title: "High-Profile Matchups", info: "Can boost overall revenue by 20%. The stature of the event is elevated when two renowned boxers face off, drawing more attention and generating buzz."},
-        { title: "International Exposure", info: "Around 3% of revenue can come from global broadcasting rights, showcasing boxing's universal appeal."},
-        { title: "Media Coverage", info: "Indirectly boosts revenue by about 2%. Pre-event promotions, press conferences, and interviews serve as pivotal promotional tools." }
-    ];
-    
-    const bubbles = drivers.map(driver => ({ ...driver, grabbed: false }));
+        const drivers = [
+            { title: "Pay-Per-View Revenue", info: "Contributes up to 70% of total revenue. The anticipation and hype surrounding marquee matchups lead fans to purchase events, especially with the convenience of digital streaming."},
+            { title: "Sponsorship Deals", info: "Account for around 15% of earnings. Brands align with high-profile events to enhance their visibility and appeal."},
+            { title: "Ticket Sales", info: "Approximately 10% of the revenue comes from ticket sales. The live experience of a boxing event, especially in large venues, can draw thousands."},
+            { title: "High-Profile Matchups", info: "Can boost overall revenue by 20%. The stature of the event is elevated when two renowned boxers face off, drawing more attention and generating buzz."},
+            { title: "International Exposure", info: "Around 3% of revenue can come from global broadcasting rights, showcasing boxing's universal appeal."},
+            { title: "Media Coverage", info: "Indirectly boosts revenue by about 2%. Pre-event promotions, press conferences, and interviews serve as pivotal promotional tools." }
+        ];
+        
+        const bubbles = drivers.map(driver => ({ ...driver, popped: false, popTimeout: null }));
 
-    function setup() {
-        createCanvas(windowWidth, windowHeight);
-        setupVideo();
-        bodypix = ml5.bodyPix(video, options, modelReady);
-    }
-
-    function setupVideo() {
-        video = createCapture(VIDEO);
-        video.size(width, height);
-        video.hide();
-    }
-
-    function modelReady() {
-        bodypix.segment(gotResults);
-    }
-
-    function gotResults(error, result) {
-        if (error) {
-            console.error(error);
-            return;
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            setupVideo();
+            bodypix = ml5.bodyPix(video, options, modelReady);
         }
-        segmentation = result;
-        bodypix.segment(gotResults);
-    }
 
-    function drawGradientEffect() {
-        for (let i = 0; i <= width; i += 10) {
-            let inter = map(i, 0, width, 0, 1);
-            let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
-            stroke(c);
-            line(i, 0, i, height);
+        function setupVideo() {
+            video = createCapture(VIDEO);
+            video.size(width, height);
+            video.hide();
         }
-    }
 
-    function drawIncentiveDriversBubbles() {
-        for (let i = 0; i < bubbles.length; i++) {
-            let x = (i + 1) * width / (bubbles.length + 1);
-            let y = height / 2 + 50 * sin(0.1 * frameCount + i);
-            let d = 50 + 10 * sin(0.1 * frameCount + i);
+        function modelReady() {
+            bodypix.segment(gotResults);
+        }
 
-            fill(255);
-            if (bubbles[i].grabbed) {
-                fill(200);
+        function gotResults(error, result) {
+            if (error) {
+                console.error(error);
+                return;
             }
-            ellipse(x, y, d);
-            textAlign(CENTER, CENTER);
-            textSize(16);
-            text(bubbles[i].title, x, y);
+            segmentation = result;
+            bodypix.segment(gotResults);
+        }
 
-            if (mouseIsPressed && dist(mouseX, mouseY, x, y) < d / 2) {
-                bubbles[i].grabbed = true;
-            }
-            
-            if (bubbles[i].grabbed) {
-                fill(255, 255, 255, 150);
-                rect(x - 150, y + 30, 300, 100);
-                fill(0);
-                textSize(14);
-                text(bubbles[i].info, x, y + 80, 280, 80);
+        function drawGradientEffect() {
+            for (let i = 0; i <= width; i += 10) {
+                let inter = map(i, 0, width, 0, 1);
+                let c = lerpColor(color(255, 0, 150), color(0, 255, 255), inter);
+                stroke(c);
+                line(i, 0, i, height);
             }
         }
-    }
 
-    function draw() {
-        background(0);
-        if (segmentation) {
-            image(segmentation.personMask, 0, 0, width, height);
-            drawGradientEffect();
-            drawIncentiveDriversBubbles();
+        function drawIncentiveDriversBubbles() {
+            for (let i = 0; i < bubbles.length; i++) {
+                let x = (i + 1) * width / (bubbles.length + 1);
+                let y = height / 2 + 50 * sin(0.1 * frameCount + i);
+                let d = 50 + 10 * sin(0.1 * frameCount + i);
+
+                if (!bubbles[i].popped) {
+                    fill(255);
+                    ellipse(x, y, d);
+                    textAlign(CENTER, CENTER);
+                    textSize(16);
+                    text(bubbles[i].title, x, y);
+                    
+                    if (dist(mouseX, mouseY, x, y) < d / 2) {
+                        bubbles[i].popped = true;
+                        clearTimeout(bubbles[i].popTimeout);
+                        bubbles[i].popTimeout = setTimeout(() => {
+                            bubbles[i].popped = false;
+                        }, 5000);
+                    }
+                } else {
+                    fill(255, 255, 255, 150);
+                    rect(x - 150, y - 50, 300, 100);
+                    fill(0);
+                    textSize(14);
+                    text(bubbles[i].info, x, y, 280, 80);
+                }
+            }
         }
-    }
-</script>
 
+        function draw() {
+            background(0);
+            if (segmentation) {
+                image(segmentation.personMask, 0, 0, width, height);
+                drawGradientEffect();
+                drawIncentiveDriversBubbles();
+            }
+        }
+    </script>
 </body>
 
 </html>
