@@ -66,12 +66,108 @@
             max-width: 400px;
             color: black;
         }
+
+        /* Additional styles for new content */
+        #introBanner {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            text-align: center;
+            width: 90%;
+            max-width: 650px;
+        }
+
+        .accordion {
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .accordion:active, .accordion:hover {
+            background-color: rgba(0, 255, 0, 0.2); /* Matrix green tint on hover */
+        }
+
+        #conclusion, #contact {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+        }
     </style>
 </head>
 
 <body>
     <div id="info">
         <h2>Hover over the bubbles to discover Boxing Event Incentive Drivers!</h2>
+    </div>
+
+    <div id="introBanner">
+        <h2>The Mayweather vs. Logan Paul bout was more than an event – it was a paradigm shift.</h2>
+        <p>As boxing's timeless tradition met digital stardom, the doors to a new realm of global engagement and advertising potential swung wide open. Enter Crowdface.</p>
+    </div>
+
+    <!-- Expandable Sections for the content -->
+    <div id="contentSections" style="position: absolute; bottom: 20px; width: 90%; left: 5%;">
+        <button class="accordion">Crowdface's Global Vision</button>
+        <div class="accordion-content">
+            <p>By leveraging state-of-the-art facial recognition, Crowdface turns every live audience member into a dynamic advertising canvas, overlaying sponsor logos seamlessly during broadcasts. This isn’t mere advertising; it’s a revolutionary engagement strategy.</p>
+        </div>
+
+        <button class="accordion">Mayweather vs. Logan Paul: Setting the Global Stage</button>
+        <div class="accordion-content">
+            <p>This clash of titans, seen worldwide, beckoned millions from all demographics – hardcore boxing aficionados to digital natives, fans of YouTube influencers. The audience wasn't just vast; it was varied, and it was global.</p>
+        </div>
+
+        <button class="accordion">Crowdface's Globalization Strategy in Play</button>
+        <div class="accordion-content">
+            <ul>
+                <li>Limitless Advertising Real Estate: Beyond traditional placements, every face in the audience became a potential canvas. The global reach expanded exponentially.</li>
+                <li>Flexible Sponsorship Tiers: Brands could opt for packages tailored to their reach and budget, ensuring maximum return on investment.</li>
+                <li>Dynamic Revenue Model: Crowdface's innovative stake in fight night revenues ensured alignment with the event's success and promised escalating returns as its adoption grew.</li>
+            </ul>
+        </div>
+
+        <button class="accordion">Global Revenue Potential</button>
+        <div class="accordion-content">
+            <p>Imagine the vastness of such an event's advertising allure:</p>
+            <ul>
+                <li>Direct Ad Integration: A premium package could fetch upwards of $1 million. With multiple global brands participating, the revenue scales significantly.</li>
+                <li>Revenue Sharing: A modest stake in an event's revenue, like the Mayweather-Paul bout, translates to substantial earnings, poised to grow with each event.</li>
+            </ul>
+        </div>
+
+        <button class="accordion">The Global Future with Crowdface</button>
+        <div class="accordion-content">
+            <p>Boxing, a sport steeped in tradition, is now on the cusp of a global renaissance. Crowdface is the bridge:</p>
+            <ul>
+                <li>Beyond Boundaries: Every match, every event becomes a global spectacle, connecting brands with diverse economies and cultures.</li>
+                <li>Digital Native Engagement: For an audience now fluent in digital experiences, Crowdface is both intuitive and groundbreaking.</li>
+                <li>Ensuring Global Brand Resonance: In a world overflowing with advertisements, Crowdface ensures brands resonate, remembered and revered.</li>
+            </ul>
+        </div>
+
+        <div id="conclusion">
+            <p>Mayweather vs. Logan Paul was a harbinger of the new age of boxing - one that's not confined by geographies but is truly global. With Crowdface, the world isn't just watching; it's engaging. It’s not just a match; it’s a movement. As we spearhead this global revolution, join us in crafting the future.</p>
+        </div>
+
+        <div id="contact">
+            <p>For deeper insights and pioneering partnerships, reach out to our visionary team at <a href="mailto:fly@ultrabrain.world">fly@ultrabrain.world</a>.</p>
+        </div>
     </div>
 
     <!-- Modal Template -->
@@ -99,7 +195,7 @@
             { title: "International Exposure", info: "Around 3% of revenue can come from global broadcasting rights, showcasing boxing's universal appeal."},
             { title: "Media Coverage", info: "Indirectly boosts revenue by about 2%. Pre-event promotions, press conferences, and interviews serve as pivotal promotional tools." }
         ];
-        
+
         const bubbles = drivers.map(driver => ({ ...driver, popped: false, popTimeout: null }));
 
         function setup() {
@@ -179,3 +275,4 @@
 </body>
 
 </html>
+
