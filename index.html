@@ -17,22 +17,21 @@
     <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
 
     <!-- Styles -->
-   <!-- Styles -->
+ <!-- Styles -->
 <style>
     body {
-        overflow: hidden;
         font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #14213D, #233D58, #335C81); /* Slightly brighter gradient */
-        color: #E0E0E0; 
+        background: linear-gradient(135deg, #14213D, #233D58, #335C81);
+        color: #E0E0E0;
         margin: 0;
-        padding: 0;
+        padding: 20px;
     }
 
     h2 {
         font-size: 2.2em;
         font-weight: bold;
-        color: #FCA311; 
-        text-shadow: 2px 2px 10px #FCA311; 
+        color: #FCA311;
+        text-shadow: 2px 2px 10px #FCA311;
         margin: 20px 0;
     }
 
@@ -41,34 +40,49 @@
         margin: 10px 0;
     }
 
-    #info, #introBanner, .accordion, #conclusion, #contact {
-        background-color: rgba(28, 40, 51, 0.8); /* Translucent background for readability */
+    #info, #introBanner {
+        background-color: rgba(28, 40, 51, 0.9);
         border: 1px solid #B0C7D4;
         padding: 20px;
         margin: 20px 0;
         border-radius: 8px;
-        transition: transform 0.3s, box-shadow 0.3s;
+        max-width: 70%;  /* Limit width */
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    #info:hover, #introBanner:hover, .accordion:hover, #conclusion:hover, #contact:hover {
-        transform: scale(1.03);
-        box-shadow: 0px 0px 20px #FCA311; 
+    #contentSections {
+        max-width: 80%;  /* Limit width */
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 30px;
     }
 
     .accordion {
-        font-size: 1.5em;
+        font-size: 1.2em;
         cursor: pointer;
         background: none;
         border: none;
         text-align: left;
         outline: none;
+        width: 100%;  /* Full width */
+        padding: 10px;
+        margin: 10px 0;
+        background-color: rgba(28, 40, 51, 0.9);
+        border: 1px solid #B0C7D4;
+    }
+
+    .accordion-content {
+        padding: 10px;
+        margin: 10px 0;
+        background-color: rgba(28, 40, 51, 0.8);
+        border: 1px solid #B0C7D4;
     }
 
     a {
         color: #FCA311;
         text-decoration: none;
         border-bottom: 1px dashed #FCA311;
-        transition: border-bottom 0.3s, color 0.3s;
     }
 
     a:hover {
@@ -83,8 +97,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(20, 33, 61, 0.9); /* Darker overlay for modal */
-        z-index: 3;
+        background-color: rgba(20, 33, 61, 0.9);
+        z-index: 100;  /* High z-index to ensure it's on top */
         justify-content: center;
         align-items: center;
     }
@@ -97,8 +111,10 @@
         max-width: 400px;
         color: white;
         border-radius: 8px;
+        z-index: 101;  /* Ensure modal content is above overlay */
     }
 </style>
+
 
 
 
