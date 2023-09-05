@@ -28,6 +28,29 @@
         overflow-x: hidden;
     }
 
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        padding: 20px;
+    }
+
+    .canvasArea {
+        grid-column: 1;
+        height: 90vh;
+        background: rgba(17, 45, 66, 0.5);
+    }
+
+    .contentArea {
+        grid-column: 2;
+        overflow-y: auto;
+        height: 90vh;
+        background: rgba(17, 45, 66, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 0 20px #00E5FF; /* Neon blue glow */
+    }
+
     h2 {
         font-size: 2.8em;
         font-weight: bold;
@@ -45,25 +68,9 @@
     }
 
     #info, #introBanner {
-        background-color: #112D42; /* Dark metal shade */
         border-radius: 15px;
         padding: 20px;
-        margin: 20px;
-        box-shadow: 0 0 20px #00E5FF; /* Neon blue glow */
-        max-width: 80%;
-        margin: 20px auto;
-    }
-
-    #contentSections {
-        position: fixed;
-        top: 40px;
-        right: 20px;
-        width: 20%;
-        height: 80vh;
-        overflow-y: auto;
-        padding: 10px;
-        background-color: rgba(17, 45, 66, 0.9); /* Slightly transparent background */
-        border-radius: 15px;
+        margin: 20px 0;
         box-shadow: 0 0 20px #00E5FF; /* Neon blue glow */
     }
 
@@ -131,6 +138,7 @@
         box-shadow: 0 0 20px #00E5FF;
     }
 </style>
+
 
 
 
