@@ -21,87 +21,87 @@
     /* Base styling */
     body {
         font-family: 'Orbitron', sans-serif; /* Futuristic font */
-        background: #091A28; /* Deep space blue */
+        background: linear-gradient(45deg, #091A28, #1C3D5A); /* Deep space blue to dark metal gradient */
         color: #AAB7C4; /* Metallic text */
         margin: 0;
-        padding: 0;
+        padding: 20px;
         overflow-x: hidden;
+        transition: all 0.3s;
     }
 
     .container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 20px;
-        padding: 20px;
-    }
-
-    .canvasArea {
-        grid-column: 1;
-        height: 90vh;
-        background: rgba(17, 45, 66, 0.5);
-    }
-
-    .contentArea {
-        grid-column: 2;
-        overflow-y: auto;
-        height: 90vh;
-        background: rgba(17, 45, 66, 0.5);
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 0 20px #00E5FF; /* Neon blue glow */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     h2 {
-        font-size: 2.8em;
+        font-size: 3em;
         font-weight: bold;
         color: #FFFFFF;
         text-shadow: 2px 2px 10px #00E5FF; /* Neon blue glow */
-        margin: 20px 0;
-        text-align: center;
+        margin: 40px 0;
+        transition: all 0.3s;
+    }
+
+    h2:hover {
+        transform: scale(1.05);
     }
 
     p, ul, li {
         font-size: 1em;
-        margin: 10px 0;
+        margin: 20px 0;
         line-height: 1.5;
         text-align: justify;
+        max-width: 800px;
+        transition: all 0.3s;
+    }
+
+    p:hover, ul:hover, li:hover {
+        transform: scale(1.03);
     }
 
     #info, #introBanner {
+        background: rgba(17, 45, 66, 0.6); /* Semi-transparent dark metal shade */
+        border: none;
         border-radius: 15px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 0 20px #00E5FF; /* Neon blue glow */
+        padding: 30px;
+        margin: 20px;
+        box-shadow: 0 0 30px #00E5FF; /* Neon blue glow */
+        transition: all 0.3s;
+    }
+
+    #info:hover, #introBanner:hover {
+        background: rgba(17, 45, 66, 0.8); 
+        transform: scale(1.05);
     }
 
     .accordion {
         width: 100%;
         font-size: 1.2em;
         cursor: pointer;
-        background: #112D42;
-        border: 1px solid #00E5FF;
+        background: transparent;
+        border: 2px solid #00E5FF; /* Neon blue */
         color: #AAB7C4;
-        padding: 10px;
+        padding: 15px;
         margin: 10px 0;
         border-radius: 10px;
-        transition: background-color 0.3s, color 0.3s;
+        transition: all 0.3s;
         text-align: left;
     }
 
     .accordion:hover {
-        background-color: #1C3D5A;
-        color: #00E5FF;
+        background: rgba(17, 45, 66, 0.6);
+        transform: scale(1.05);
     }
 
     .accordion-content {
         display: none; /* Hidden by default */
-        width: 100%;
-        padding: 10px;
-        margin: 0 auto 10px auto;
-        background-color: #112D42;
-        border-left: 3px solid #00E5FF;
+        background: rgba(17, 45, 66, 0.6); /* Semi-transparent dark metal shade */
         border-radius: 10px;
-        box-shadow: 0 0 10px #00E5FF;
+        padding: 20px;
+        margin-top: 10px;
+        transition: all 0.3s;
     }
 
     a {
@@ -112,6 +112,7 @@
 
     a:hover {
         color: #AAB7C4;
+        transform: scale(1.05);
     }
 
     .modal {
@@ -125,19 +126,24 @@
         z-index: 1000;
         justify-content: center;
         align-items: center;
+        transition: all 0.3s;
     }
 
     .modal-content {
-        background-color: #112D42;
-        padding: 20px;
-        border: 1px solid #00E5FF;
-        border-radius: 15px;
-        width: 100%;
-        max-width: 500px;
+        background: rgba(17, 45, 66, 0.8);
+        padding: 40px;
+        border: 2px solid #00E5FF;
+        border-radius: 20px;
         color: #AAB7C4;
-        box-shadow: 0 0 20px #00E5FF;
+        box-shadow: 0 0 40px #00E5FF;
+        transition: all 0.3s;
+    }
+
+    .modal-content:hover {
+        transform: scale(1.05);
     }
 </style>
+
 
 
 
